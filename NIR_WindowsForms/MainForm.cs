@@ -10,17 +10,17 @@ using System.Windows.Forms;
 
 namespace NIR_WindowsForms
 {
-    public partial class Form1 : Form
+    public partial class MainForm : Form
     {
         private static Bitmap sourceImage = NIR_WindowsForms.Properties.Resources._2; //исходное изображение внедренное в ресурсы программы
-       
+
         private static Bitmap tempImage;
-        
-        public Form1()
+
+        public MainForm()
         {
             InitializeComponent();
-            tempImage = UtilityFunctions.testImage(sourceImage.Width, sourceImage.Height);
-           
+            tempImage = Picture.generateTestImage(sourceImage.Width, sourceImage.Height);
+
             sourceImageBox.Image = tempImage;
             UtilityFunctions.setInitialData(tempImage);
         }
@@ -47,38 +47,40 @@ namespace NIR_WindowsForms
 
         private void menuBox_SelectedIndexChanged(object sender, EventArgs e)
         {
-            resultImageBox.Image = Steps.step(menuBox.SelectedIndex);    
+            resultImageBox.Image = Steps.step(menuBox.SelectedIndex);
         }
     }
 
-    public static class Steps {
+    public static class Steps
+    {
         private static Bitmap sourceImage = NIR_WindowsForms.Properties.Resources._2;
 
         private static Bitmap[] images = new Bitmap[50];
 
-        private static Bitmap choose(int num) {
-            switch (num) {
+        private static Bitmap choose(int num){
+            switch (num){
                 case 0:
-                    return UtilityFunctions.grad();
+                    UtilityFunctions.pointGrad();
+                    return UtilityFunctions.pModule();
                 case 1:
-                    return UtilityFunctions.direction();
+                    return UtilityFunctions.pDirection();
                 case 2:
-                    UtilityFunctions.gradient(9);
-                    return UtilityFunctions.gModule();
+                    UtilityFunctions.areaGrad(9);
+                    return UtilityFunctions.aModule();
                 case 3:
-                    return UtilityFunctions.gDirection();
+                    return UtilityFunctions.aDirection();
                 default:
                     return new Bitmap(0, 0);
             }
         }
 
-        public static Bitmap step(int st) {
+        public static Bitmap step(int st){
             if (st > 0) { step(st - 1); }
-            if (images[st] == null) {
+            if (images[st] == null){
                 images[st] = choose(st);
                 return images[st];
             }
-            else {
+            else{
                 return images[st];
             }
         }
