@@ -128,14 +128,16 @@
             "Модуль (малый)",
             "Направление (малое)",
             "Модуль (большой)",
-            "Направление (большое)"});
+            "Направление (большое)",
+            "Поле направлений",
+            "Когеррентность"});
             this.menuBox.Location = new System.Drawing.Point(409, 467);
             this.menuBox.Name = "menuBox";
             this.menuBox.Size = new System.Drawing.Size(224, 28);
             this.menuBox.TabIndex = 12;
             this.menuBox.SelectedIndexChanged += new System.EventHandler(this.menuBox_SelectedIndexChanged);
             // 
-            // Form1
+            // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -151,7 +153,7 @@
             this.Controls.Add(this.sourceImageBox);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
-            this.Name = "Form1";
+            this.Name = "MainForm";
             this.Text = "Градиент и его направление";
             ((System.ComponentModel.ISupportInitialize)(this.sourceImageBox)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.resultImageBox)).EndInit();

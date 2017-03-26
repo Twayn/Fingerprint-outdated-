@@ -24,8 +24,19 @@ namespace NIR_WindowsForms
 
             for (int x = 0; x < image.Width; x++) {
                 for (int y = 0; y < image.Height; y++) {
-                    int temp = Convert.ToInt32(array[x, y] / ratio);
-                    image.SetPixel(x, y, Color.FromArgb(temp, temp, temp));
+                    try
+                    {
+                        int temp = Convert.ToInt32(array[x, y] / ratio);
+                        image.SetPixel(x, y, Color.FromArgb(temp, temp, temp));
+                    }
+                    catch (System.OverflowException e)
+                    {
+                        Console.WriteLine("X: " + x);
+                        Console.WriteLine("Y: " + y);
+                        Console.WriteLine("array[x,y]: " + array[x, y]);
+                        Console.WriteLine("ratio: " + ratio);
+                    }
+                    
                 }
             }
 

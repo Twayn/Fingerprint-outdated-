@@ -20,6 +20,7 @@ namespace NIR_WindowsForms
         {
             InitializeComponent();
             tempImage = Picture.generateTestImage(sourceImage.Width, sourceImage.Height);
+            tempImage = sourceImage;
 
             sourceImageBox.Image = tempImage;
             UtilityFunctions.setInitialData(tempImage);
@@ -69,6 +70,10 @@ namespace NIR_WindowsForms
                     return UtilityFunctions.aModule();
                 case 3:
                     return UtilityFunctions.aDirection();
+                case 4:
+                    return UtilityFunctions.directionField();
+                case 5:
+                    return UtilityFunctions.aCoh();
                 default:
                     return new Bitmap(0, 0);
             }

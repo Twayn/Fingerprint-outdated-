@@ -24,6 +24,8 @@ namespace NIR_WindowsForms
         private static double[,] areaModule;
         private static double[,] areaAngle;
 
+        private static double[,] coh;
+
         public static void setInitialData(Bitmap image)
         {
             _width = image.Width;
@@ -44,6 +46,8 @@ namespace NIR_WindowsForms
 
             areaModule = new double[_width, _height];
             areaAngle = new double[_width, _height];
+
+            coh = new double[_width, _height];
         }
 
         /*Module and argument of gradient (at point)*/
@@ -68,7 +72,8 @@ namespace NIR_WindowsForms
                     gy = (z3 + 2 * z6 + z9) - (z1 + 2 * z4 + z7);
 
                     pointModule[x, y] = Math.Sqrt(gx * gx + gy * gy);
-                    pointAngle[x, y] = Trigon.atan2(gy, gx);
+                    pointAngle[x, y] = Trigon.atanDouble(gy, gx);
+                    //pointAngle[x, y] = Trigon.atanInt((int)Math.Ceiling(gy), (int)Math.Ceiling(gx));
                 }
             }
         }
@@ -83,15 +88,21 @@ namespace NIR_WindowsForms
                     double sumX = 0;
                     double sumY = 0;
 
+                    double sumModules = 0;
+                    
                     for (int w = x - inner; w < x + inner; w++) {
                         for (int z = y - inner; z < y + inner; z++) {
                             sumX += pointModule[w, z] * Trigon.cos(2 * pointAngle[w, z]);
                             sumY += pointModule[w, z] * Trigon.sin(2 * pointAngle[w, z]);
+
+                            sumModules += pointModule[w, z];
                         }
                     }
 
                     areaModule[x, y] = Math.Sqrt(sumX * sumX + sumY * sumY);
-                    areaAngle[x, y] = Trigon.atan2(sumY, sumX) / 2;
+                    areaAngle[x, y] = Trigon.atanDouble(sumY, sumX) / 2;
+                    coh[x, y] = areaModule[x, y] / sumModules;
+                    //areaAngle[x, y] = Trigon.atanInt((int)Math.Ceiling(sumY), (int)Math.Ceiling(sumX)) / 2;
                 }
             }
         }
@@ -110,6 +121,30 @@ namespace NIR_WindowsForms
 
         public static Bitmap aDirection(){
             return Picture.drawImage(areaAngle);
+        }
+
+        public static Bitmap aCoh(){
+            return Picture.drawImage(coh);
+        }
+
+        public static Bitmap directionField(){
+            Bitmap image = new Bitmap(_width, _height);
+            Pen blackPen = new Pen(Color.Black, 1);
+
+            int length = 9;
+            int area = 20;
+
+            using (var graphics = Graphics.FromImage(image)){
+                for (int x = area; x < _width - area; x += area){
+                    for (int y = area; y < _height - area; y += area){
+                        graphics.DrawLine(blackPen, x, y,
+                             Convert.ToInt32(x + Trigon.cos(areaAngle[x, y]) * length),
+                             Convert.ToInt32(y + Trigon.sin(areaAngle[x, y]) * length));
+                    }
+                }
+            }
+
+            return image;
         }
     }
 }

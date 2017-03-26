@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace NIR_WindowsForms
 {
-    class Trigon
+    abstract class Trigon
     {
         static double RAD2DEG = 180.0 / Math.PI;
 
@@ -31,7 +31,7 @@ namespace NIR_WindowsForms
            };
 
         /*Integer arctangent (0-255)*/
-        public static int arctgInt(int y, int x){
+        public static int atanInt(int y, int x){
             int abx = Math.Abs(x);
             int aby = Math.Abs(y);
 
@@ -69,7 +69,7 @@ namespace NIR_WindowsForms
             return Math.Sin(angle / RAD2DEG);
         }
 
-        public static double atan2(double y, double x) {
+        public static double atanDouble(double y, double x) {
             /*
                 if (gx == 0){
                     if (gy == 0) angle = 0;
