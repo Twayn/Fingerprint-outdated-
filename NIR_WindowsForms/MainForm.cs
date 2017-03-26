@@ -26,26 +26,6 @@ namespace NIR_WindowsForms
             UtilityFunctions.setInitialData(tempImage);
         }
 
-        private void stepOneButton_Click(object sender, EventArgs e)
-        {
-            resultImageBox.Image = Steps.step(0);
-        }
-
-        private void stepTwoButton_Click(object sender, EventArgs e)
-        {
-            resultImageBox.Image = Steps.step(1);
-        }
-
-        private void stepThreeButton_Click(object sender, EventArgs e)
-        {
-            resultImageBox.Image = Steps.step(2);
-        }
-
-        private void stepFourButton_Click(object sender, EventArgs e)
-        {
-            resultImageBox.Image = Steps.step(3);
-        }
-
         private void menuBox_SelectedIndexChanged(object sender, EventArgs e)
         {
             resultImageBox.Image = Steps.step(menuBox.SelectedIndex);

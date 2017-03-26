@@ -24,7 +24,7 @@ namespace NIR_WindowsForms
         private static double[,] areaModule;
         private static double[,] areaAngle;
 
-        private static double[,] coh;
+        private static double[,] areaCoh;
 
         public static void setInitialData(Bitmap image)
         {
@@ -35,6 +35,7 @@ namespace NIR_WindowsForms
 
             sourceImage = new double[_width, _height];
 
+            //Load brightness of image pixels to matrix
             for (int i = 0; i < _width; i++) {
                 for (int j = 0; j < _height; j++) {
                     sourceImage[i, j] = image.GetPixel(i, j).GetBrightness() * 255;
@@ -47,7 +48,7 @@ namespace NIR_WindowsForms
             areaModule = new double[_width, _height];
             areaAngle = new double[_width, _height];
 
-            coh = new double[_width, _height];
+            areaCoh = new double[_width, _height];
         }
 
         /*Module and argument of gradient (at point)*/
@@ -101,7 +102,8 @@ namespace NIR_WindowsForms
 
                     areaModule[x, y] = Math.Sqrt(sumX * sumX + sumY * sumY);
                     areaAngle[x, y] = Trigon.atanDouble(sumY, sumX) / 2;
-                    coh[x, y] = areaModule[x, y] / sumModules;
+                    //Coherence
+                    areaCoh[x, y] = areaModule[x, y] / sumModules;
                     //areaAngle[x, y] = Trigon.atanInt((int)Math.Ceiling(sumY), (int)Math.Ceiling(sumX)) / 2;
                 }
             }
@@ -124,22 +126,36 @@ namespace NIR_WindowsForms
         }
 
         public static Bitmap aCoh(){
-            return Picture.drawImage(coh);
+            return Picture.drawImage(areaCoh);
         }
 
         public static Bitmap directionField(){
             Bitmap image = new Bitmap(_width, _height);
             Pen blackPen = new Pen(Color.Black, 1);
 
-            int length = 9;
-            int area = 20;
+            //Best view
+            int length = 10;
+            int area = 16;
 
             using (var graphics = Graphics.FromImage(image)){
                 for (int x = area; x < _width - area; x += area){
                     for (int y = area; y < _height - area; y += area){
-                        graphics.DrawLine(blackPen, x, y,
-                             Convert.ToInt32(x + Trigon.cos(areaAngle[x, y]) * length),
-                             Convert.ToInt32(y + Trigon.sin(areaAngle[x, y]) * length));
+                        if (areaAngle[x, y] <= 180.0){
+                            graphics.DrawLine(blackPen, x, y,
+                             Convert.ToInt32(x + Trigon.cos(areaAngle[x, y]) * length / 2),
+                             Convert.ToInt32(y + Trigon.sin(areaAngle[x, y]) * length / 2));
+                            graphics.DrawLine(blackPen, x, y,
+                             Convert.ToInt32(x + Trigon.cos(areaAngle[x, y] + 180) * length / 2),
+                             Convert.ToInt32(y + Trigon.sin(areaAngle[x, y] + 180) * length / 2));
+                        }
+                        else {
+                            graphics.DrawLine(blackPen, x, y,
+                             Convert.ToInt32(x + Trigon.cos(areaAngle[x, y]) * length / 2),
+                             Convert.ToInt32(y + Trigon.sin(areaAngle[x, y]) * length / 2));
+                            graphics.DrawLine(blackPen, x, y,
+                             Convert.ToInt32(x + Trigon.cos(areaAngle[x, y]-180) * length / 2),
+                             Convert.ToInt32(y + Trigon.sin(areaAngle[x, y]-180) * length / 2));
+                        }
                     }
                 }
             }
