@@ -19,7 +19,7 @@ namespace NIR_WindowsForms
             InitializeComponent();
             //init(Picture.generateTestImage(sourceImage.Width, sourceImage.Height), gauss);
             //init(sourceImage, gauss);
-            init(sourceImage);
+            init();
         }
 
         private void menuBox_SelectedIndexChanged(object sender, EventArgs e)
@@ -31,7 +31,7 @@ namespace NIR_WindowsForms
         {
             switch (filterComboBox.SelectedIndex) { 
                 case 0:
-                    init(sourceImage);
+                    init();
                     break;
                 case 1:
                     init(sourceImage, equal);
@@ -51,25 +51,27 @@ namespace NIR_WindowsForms
             UtilityFunctions.setInitialData(temp);
             setMatrix(filter);
             Steps.clear();
+            resultImageBox.Image = null;
         }
 
-        private void init(Bitmap source) {
-            sourceImageBox.Image = source;
-            UtilityFunctions.setInitialData(source);
+        public void init() {
+            sourceImageBox.Image = sourceImage;
+            UtilityFunctions.setInitialData(sourceImage);
             setMatrix();
             Steps.clear();
+            resultImageBox.Image = null;
         }
 
         private void setMatrix() {
-            maskedTextBox1.Text = "0";
-            maskedTextBox2.Text = "0";
-            maskedTextBox3.Text = "0";
-            maskedTextBox4.Text = "0";
-            maskedTextBox5.Text = "0";
-            maskedTextBox6.Text = "0";
-            maskedTextBox7.Text = "0";
-            maskedTextBox8.Text = "0";
-            maskedTextBox9.Text = "0";
+            maskedTextBox1.Text = "1";
+            maskedTextBox2.Text = "1";
+            maskedTextBox3.Text = "1";
+            maskedTextBox4.Text = "1";
+            maskedTextBox5.Text = "1";
+            maskedTextBox6.Text = "1";
+            maskedTextBox7.Text = "1";
+            maskedTextBox8.Text = "1";
+            maskedTextBox9.Text = "1";
         }
 
         private void setMatrix(int[] filter) {
@@ -109,5 +111,15 @@ namespace NIR_WindowsForms
           2, 4, 2, 
           1, 2, 1
         };
+
+        private void gradAreaUpDown_ValueChanged(object sender, EventArgs e)
+        {
+            Steps.setAreaGrad(Convert.ToInt32(gradAreaUpDown.Value));
+        }
+
+        private void clearButton_Click(object sender, EventArgs e)
+        {
+            init();
+        }
     }
 }

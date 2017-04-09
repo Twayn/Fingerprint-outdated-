@@ -10,6 +10,12 @@ namespace NIR_WindowsForms
     public class Steps {
         private static Bitmap[] images = new Bitmap[50];
 
+        private static int areaGrad = 9;
+
+        public static void setAreaGrad(int area) {
+            areaGrad = area;
+        }
+
         private static Bitmap choose(int num) {
             switch (num) {
                 case 0:
@@ -18,7 +24,7 @@ namespace NIR_WindowsForms
                 case 1:
                     return UtilityFunctions.pDirection();
                 case 2:
-                    UtilityFunctions.areaGrad(9);
+                    UtilityFunctions.areaGrad(areaGrad);
                     return UtilityFunctions.aModule();
                 case 3:
                     return UtilityFunctions.aDirection();

@@ -307,7 +307,7 @@ namespace NIR_WindowsForms
 
         public static Bitmap ridgeDensity() {
             int lineLength = 32;
-            double angle = 90;
+            double angle = areaAngle[100, 100];
 
             int x = 100;
             int y = 100;

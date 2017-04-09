@@ -47,8 +47,12 @@
             this.label3 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.blurButton = new System.Windows.Forms.Button();
+            this.gradAreaUpDown = new System.Windows.Forms.NumericUpDown();
+            this.label5 = new System.Windows.Forms.Label();
+            this.clearButton = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.sourceImageBox)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.resultImageBox)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.gradAreaUpDown)).BeginInit();
             this.SuspendLayout();
             // 
             // sourceImageBox
@@ -225,11 +229,62 @@
             this.blurButton.UseVisualStyleBackColor = true;
             this.blurButton.Click += new System.EventHandler(this.blurButton_Click);
             // 
+            // gradAreaUpDown
+            // 
+            this.gradAreaUpDown.Increment = new decimal(new int[] {
+            2,
+            0,
+            0,
+            0});
+            this.gradAreaUpDown.Location = new System.Drawing.Point(292, 81);
+            this.gradAreaUpDown.Maximum = new decimal(new int[] {
+            27,
+            0,
+            0,
+            0});
+            this.gradAreaUpDown.Minimum = new decimal(new int[] {
+            5,
+            0,
+            0,
+            0});
+            this.gradAreaUpDown.Name = "gradAreaUpDown";
+            this.gradAreaUpDown.Size = new System.Drawing.Size(86, 20);
+            this.gradAreaUpDown.TabIndex = 25;
+            this.gradAreaUpDown.Value = new decimal(new int[] {
+            9,
+            0,
+            0,
+            0});
+            this.gradAreaUpDown.ValueChanged += new System.EventHandler(this.gradAreaUpDown_ValueChanged);
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.label5.Location = new System.Drawing.Point(299, 51);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(71, 18);
+            this.label5.TabIndex = 26;
+            this.label5.Text = "Апертура";
+            // 
+            // clearButton
+            // 
+            this.clearButton.Location = new System.Drawing.Point(298, 132);
+            this.clearButton.Name = "clearButton";
+            this.clearButton.Size = new System.Drawing.Size(75, 23);
+            this.clearButton.TabIndex = 27;
+            this.clearButton.Text = "Сбросить";
+            this.clearButton.UseVisualStyleBackColor = true;
+            this.clearButton.Click += new System.EventHandler(this.clearButton_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(699, 539);
+            this.Controls.Add(this.clearButton);
+            this.Controls.Add(this.label5);
+            this.Controls.Add(this.gradAreaUpDown);
             this.Controls.Add(this.blurButton);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.label3);
@@ -254,6 +309,7 @@
             this.Text = "Градиент и его направление";
             ((System.ComponentModel.ISupportInitialize)(this.sourceImageBox)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.resultImageBox)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.gradAreaUpDown)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -279,6 +335,9 @@
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Button blurButton;
+        private System.Windows.Forms.NumericUpDown gradAreaUpDown;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.Button clearButton;
     }
 }
 
