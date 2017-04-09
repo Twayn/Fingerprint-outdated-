@@ -248,18 +248,16 @@ namespace NIR_WindowsForms
                 for (int x = area; x < _width - area; x += area){
                     for (int y = area; y < _height - area; y += area){
                         if (areaAngle[x, y] <= 180.0){
-                            graphics.DrawLine(blackPen, x, y,
+                            graphics.DrawLine(blackPen, 
                              Convert.ToInt32(x + Trigon.cos(areaAngle[x, y]) * length / 2),
-                             Convert.ToInt32(y + Trigon.sin(areaAngle[x, y]) * length / 2));
-                            graphics.DrawLine(blackPen, x, y,
+                             Convert.ToInt32(y + Trigon.sin(areaAngle[x, y]) * length / 2),
                              Convert.ToInt32(x + Trigon.cos(areaAngle[x, y] + 180) * length / 2),
                              Convert.ToInt32(y + Trigon.sin(areaAngle[x, y] + 180) * length / 2));
                         }
                         else {
-                            graphics.DrawLine(blackPen, x, y,
+                            graphics.DrawLine(blackPen,
                              Convert.ToInt32(x + Trigon.cos(areaAngle[x, y]) * length / 2),
-                             Convert.ToInt32(y + Trigon.sin(areaAngle[x, y]) * length / 2));
-                            graphics.DrawLine(blackPen, x, y,
+                             Convert.ToInt32(y + Trigon.sin(areaAngle[x, y]) * length / 2),
                              Convert.ToInt32(x + Trigon.cos(areaAngle[x, y]-180) * length / 2),
                              Convert.ToInt32(y + Trigon.sin(areaAngle[x, y]-180) * length / 2));
                         }
@@ -357,20 +355,18 @@ namespace NIR_WindowsForms
             Console.WriteLine("divider " + divider);
             Console.WriteLine("result " + (double)delimeter/divider);
 
-            //СКОРЕЕ ВСЕГО НУЖНО -1
-  
+       
             //for (int x = lineLength / 2; x < _width - lineLength / 2; x++){
             //    for (int y = lineLength / 2; y < _height - lineLength / 2; y++){
-            //        //pointAngle[x, y];
-
-            //        //sourceImage[x, y];
+            //        
             //    }
             //}
             return b;
         }
 
+        //Bresenham's line algorithm
         private static List<Coord> getLine(int x1, int y1, int x2, int y2, Bitmap image) {
-            Coordinates c = new Coordinates();
+            List<Coord> coordinates = new List<Coord>();
 
             Color red = Color.FromArgb(255, 0, 0);
             int deltaX = Math.Abs(x2 - x1);
@@ -383,7 +379,8 @@ namespace NIR_WindowsForms
             while(x1 != x2 || y1 != y2) 
             {
                 image.SetPixel(x1, y1, red);
-                c.add(new Coord(x1, y1));
+                coordinates.Add(new Coord(x1, y1));
+
                 int error2 = error * 2;
                 
                 if(error2 > -deltaY) 
@@ -399,9 +396,9 @@ namespace NIR_WindowsForms
             }
 
             image.SetPixel(x2, y2, red);
-            c.add(new Coord(x2, y2));
+            coordinates.Add(new Coord(x2, y2));
 
-            return c.getCoordinates();
+            return coordinates;
         }
 
         private class Coord { 
@@ -418,34 +415,6 @@ namespace NIR_WindowsForms
 
             public int getY(){
                 return y;
-            }
-
-            public bool compareTo(Coord c) {
-                if (this.x == c.getX() && this.y == c.getY()){
-                    return true;
-                }
-                else { return false; }
-            }
-
-            public void print() {
-                Console.WriteLine("X: " + this.x + " Y: " + this.y);
-            }
-        }
-
-        private class Coordinates { 
-            private List<Coord> coordinates = new List<Coord>();
-
-            public void add (Coord c){
-                bool isHere = false;
-                foreach (Coord item in coordinates){
-                    if (c.compareTo(item)) isHere = true;
-                }
-                if (!isHere)
-                    coordinates.Add(c);
-            }
-
-            public List<Coord> getCoordinates(){
-                return coordinates;
             }
         }
     }
