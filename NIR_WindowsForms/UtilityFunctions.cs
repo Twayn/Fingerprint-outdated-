@@ -26,6 +26,11 @@ namespace NIR_WindowsForms
 
         private static double[,] areaCoh;
 
+        private static double[,] areaCohMin;
+        private static double[,] areaCohMax;
+
+        private static double[,] density;
+
         public static void setInitialData(Bitmap image)
         {
             _width = image.Width;
@@ -49,6 +54,19 @@ namespace NIR_WindowsForms
             areaAngle = new double[_width, _height];
 
             areaCoh = new double[_width, _height];
+
+            areaCohMin = new double[_width, _height];
+            areaCohMax = new double[_width, _height];
+
+            for (int x = 0; x < _width; x++)
+            {
+                for (int y = 0; y < _height; y++)
+                {
+                    areaCohMin[x, y] = 1;
+                }
+            }
+
+            density = new double[_width, _height];
         }
 
         /*Module and argument of gradient (at point)*/
@@ -109,6 +127,85 @@ namespace NIR_WindowsForms
             }
         }
 
+        /*Module and argument of gradient (at area)*/
+        public static void minMaxCoh()
+        {
+            for (int size = 7; size < 19; size+=2) {
+                int outer = (size + 1) / 2;
+                
+                for (int x = outer; x < _width - outer; x++)
+                {
+                    for (int y = outer; y < _height - outer; y++)
+                    {
+                        double var = cohArea(size, x, y);
+
+                        if (var > areaCohMax[x, y]){
+                            areaCohMax[x, y] = var;
+                        }
+                        if (var < areaCohMin[x, y]) {
+                            areaCohMin[x, y] = var;
+                        }
+                    }
+                }
+            } 
+        }
+
+        public static double cohArea(int size, int x, int y) {
+            double sumX = 0;
+            double sumY = 0;
+            double sumModules = 0;
+
+            int area = (size - 1) / 2;
+
+            for (int w = x - area; w < x + area; w++) {
+                for (int z = y - area; z < y + area; z++) {
+                    sumX += pointModule[w, z] * Trigon.cos(2 * pointAngle[w, z]);
+                    sumY += pointModule[w, z] * Trigon.sin(2 * pointAngle[w, z]);
+
+                    sumModules += pointModule[w, z];
+                }
+            }
+            return (Math.Sqrt(sumX * sumX + sumY * sumY) / sumModules);
+        }
+
+        //public static double cohArea(int size, int x, int y) {
+        //    double sumX = 0;
+        //    double sumY = 0;
+        //    double sumModules = 0;
+
+        //    if (size % 2 == 0)
+        //    {
+        //        int area = size / 2;
+
+        //        for (int w = x - area; w < x + area-1; w++)
+        //        {
+        //            for (int z = y - area; z < y + area-1; z++)
+        //            {
+        //                sumX += pointModule[w, z] * Trigon.cos(2 * pointAngle[w, z]);
+        //                sumY += pointModule[w, z] * Trigon.sin(2 * pointAngle[w, z]);
+
+        //                sumModules += pointModule[w, z];
+        //            }
+        //        }
+        //    }
+        //    else {
+        //        int area = (size - 1) / 2;
+
+        //        for (int w = x - area; w < x + area; w++)
+        //        {
+        //            for (int z = y - area; z < y + area; z++)
+        //            {
+        //                sumX += pointModule[w, z] * Trigon.cos(2 * pointAngle[w, z]);
+        //                sumY += pointModule[w, z] * Trigon.sin(2 * pointAngle[w, z]);
+
+        //                sumModules += pointModule[w, z];
+        //            }
+        //        }
+        //    }
+        //    //Coherence
+        //    return (Math.Sqrt(sumX * sumX + sumY * sumY) / sumModules);
+        //}
+
         public static Bitmap pModule(){
             return Picture.drawImage(pointModule);
         }
@@ -127,6 +224,16 @@ namespace NIR_WindowsForms
 
         public static Bitmap aCoh(){
             return Picture.drawImage(areaCoh);
+        }
+
+        public static Bitmap aCohMin()
+        {
+            return Picture.drawImage(areaCohMin);
+        }
+
+        public static Bitmap aCohMax()
+        {
+            return Picture.drawImage(areaCohMax);
         }
 
         public static Bitmap directionField(){
@@ -161,6 +268,185 @@ namespace NIR_WindowsForms
             }
 
             return image;
+        }
+
+        public static Bitmap blur(Bitmap image, int[] filter)
+        {
+            Bitmap resultImage = new Bitmap(image);
+
+            double equalizer = 0;
+
+            for (int i = 0; i < filter.Length; i++)
+            {
+                equalizer += filter[i];
+            }
+            equalizer = 1 / equalizer;
+
+                for (int x = 1; x < image.Width - 1; x++)
+                {
+                    for (int y = 1; y < image.Height - 1; y++)
+                    {
+                        double color = 0;
+
+                        color += image.GetPixel(x - 1, y - 1).GetBrightness() * 255 * filter[0] * equalizer;
+                        color += image.GetPixel(x - 1, y).GetBrightness() * 255 * filter[1] * equalizer;
+                        color += image.GetPixel(x - 1, y + 1).GetBrightness() * 255 * filter[2] * equalizer;
+                        color += image.GetPixel(x, y - 1).GetBrightness() * 255 * filter[3] * equalizer;
+                        color += image.GetPixel(x, y).GetBrightness() * 255 * filter[4] * equalizer;
+                        color += image.GetPixel(x, y + 1).GetBrightness() * 255 * filter[5] * equalizer;
+                        color += image.GetPixel(x + 1, y - 1).GetBrightness() * 255 * filter[6] * equalizer;
+                        color += image.GetPixel(x + 1, y).GetBrightness() * 255 * filter[7] * equalizer;
+                        color += image.GetPixel(x + 1, y + 1).GetBrightness() * 255 * filter[8] * equalizer;
+
+                        Color averageColor = Color.FromArgb(Convert.ToInt32(color), Convert.ToInt32(color), Convert.ToInt32(color));
+                        resultImage.SetPixel(x, y, averageColor);
+                    }
+                }
+
+            return resultImage;
+        }
+
+
+        public static Bitmap ridgeDensity() {
+            int lineLength = 32;
+            double angle = 90;
+
+            int x = 100;
+            int y = 100;
+
+            Bitmap b = Picture.drawImage(sourceImage);
+            List<Coord> c = new List<Coord>();
+
+            if (angle <= 180.0) {
+                c = getLine(
+                 Convert.ToInt32(x + Trigon.cos(angle) * lineLength / 2),
+                 Convert.ToInt32(y + Trigon.sin(angle) * lineLength / 2),
+                 Convert.ToInt32(x + Trigon.cos(angle + 180) * lineLength / 2),
+                 Convert.ToInt32(y + Trigon.sin(angle + 180) * lineLength / 2), b);
+            }
+            else {
+                c = getLine(
+                 Convert.ToInt32(x + Trigon.cos(angle) * lineLength / 2),
+                 Convert.ToInt32(y + Trigon.sin(angle) * lineLength / 2),
+                 Convert.ToInt32(x + Trigon.cos(angle - 180) * lineLength / 2),
+                 Convert.ToInt32(y + Trigon.sin(angle - 180) * lineLength / 2), b);
+            }
+
+            List<int> maximas = new List<int>();
+
+            for (int i = 1; i < c.Count-1; i++) {
+                double left = sourceImage[c[i-1].getX(), c[i-1].getY()];
+                double center = sourceImage[c[i].getX(), c[i].getY()];
+                double right = sourceImage[c[i+1].getX(), c[i+1].getY()];
+
+                if (center > left && center > right) {
+                    maximas.Add(i);
+                }
+            }
+
+
+            int delimeter = maximas.Count - 1;
+            int divider = 0;
+
+            for (int i = 0; i < maximas.Count - 1; i++)
+            {
+                divider += Math.Abs(maximas[i] - maximas[i + 1]);
+            }
+
+            Console.WriteLine("delimeter " + delimeter);
+            Console.WriteLine("divider " + divider);
+            Console.WriteLine("result " + (double)delimeter/divider);
+
+            //СКОРЕЕ ВСЕГО НУЖНО -1
+  
+            //for (int x = lineLength / 2; x < _width - lineLength / 2; x++){
+            //    for (int y = lineLength / 2; y < _height - lineLength / 2; y++){
+            //        //pointAngle[x, y];
+
+            //        //sourceImage[x, y];
+            //    }
+            //}
+            return b;
+        }
+
+        private static List<Coord> getLine(int x1, int y1, int x2, int y2, Bitmap image) {
+            Coordinates c = new Coordinates();
+
+            Color red = Color.FromArgb(255, 0, 0);
+            int deltaX = Math.Abs(x2 - x1);
+            int deltaY = Math.Abs(y2 - y1);
+            int signX = x1 < x2 ? 1 : -1;
+            int signY = y1 < y2 ? 1 : -1;
+            
+            int error = deltaX - deltaY;
+ 
+            while(x1 != x2 || y1 != y2) 
+            {
+                image.SetPixel(x1, y1, red);
+                c.add(new Coord(x1, y1));
+                int error2 = error * 2;
+                
+                if(error2 > -deltaY) 
+                {
+                    error -= deltaY;
+                    x1 += signX;
+                }
+                if(error2 < deltaX) 
+                {
+                    error += deltaX;
+                    y1 += signY;
+                }
+            }
+
+            image.SetPixel(x2, y2, red);
+            c.add(new Coord(x2, y2));
+
+            return c.getCoordinates();
+        }
+
+        private class Coord { 
+            private int x, y;
+
+            public Coord(int x, int y){
+                this.x = x;
+                this.y = y;
+            }
+
+            public int getX(){
+                return x;
+            }
+
+            public int getY(){
+                return y;
+            }
+
+            public bool compareTo(Coord c) {
+                if (this.x == c.getX() && this.y == c.getY()){
+                    return true;
+                }
+                else { return false; }
+            }
+
+            public void print() {
+                Console.WriteLine("X: " + this.x + " Y: " + this.y);
+            }
+        }
+
+        private class Coordinates { 
+            private List<Coord> coordinates = new List<Coord>();
+
+            public void add (Coord c){
+                bool isHere = false;
+                foreach (Coord item in coordinates){
+                    if (c.compareTo(item)) isHere = true;
+                }
+                if (!isHere)
+                    coordinates.Add(c);
+            }
+
+            public List<Coord> getCoordinates(){
+                return coordinates;
+            }
         }
     }
 }
