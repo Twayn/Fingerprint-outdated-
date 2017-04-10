@@ -11,9 +11,14 @@ namespace NIR_WindowsForms
         private static Bitmap[] images = new Bitmap[50];
 
         private static int areaGrad = 9;
+        private static int areaDencity = 16;
 
         public static void setAreaGrad(int area) {
             areaGrad = area;
+        }
+
+        public static void setAreaDencity(int area) {
+            areaDencity = area;
         }
 
         private static Bitmap choose(int num) {
@@ -40,7 +45,9 @@ namespace NIR_WindowsForms
                     //return UtilityFunctions.aCohMax();
                     return new Bitmap(10, 10);
                 case 8:
-                    return UtilityFunctions.ridgeDensity();
+                    UtilityFunctions.ridgeDensity(areaDencity);
+                    return UtilityFunctions.aDencity();
+                    //return UtilityFunctions.oneRidgeDensity();
                 default:
                     return new Bitmap(10, 10);
             }

@@ -50,9 +50,14 @@
             this.gradAreaUpDown = new System.Windows.Forms.NumericUpDown();
             this.label5 = new System.Windows.Forms.Label();
             this.clearButton = new System.Windows.Forms.Button();
+            this.label6 = new System.Windows.Forms.Label();
+            this.label7 = new System.Windows.Forms.Label();
+            this.label8 = new System.Windows.Forms.Label();
+            this.dencityUpDown = new System.Windows.Forms.NumericUpDown();
             ((System.ComponentModel.ISupportInitialize)(this.sourceImageBox)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.resultImageBox)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.gradAreaUpDown)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dencityUpDown)).BeginInit();
             this.SuspendLayout();
             // 
             // sourceImageBox
@@ -236,7 +241,7 @@
             0,
             0,
             0});
-            this.gradAreaUpDown.Location = new System.Drawing.Point(292, 81);
+            this.gradAreaUpDown.Location = new System.Drawing.Point(292, 97);
             this.gradAreaUpDown.Maximum = new decimal(new int[] {
             27,
             0,
@@ -269,19 +274,81 @@
             // 
             // clearButton
             // 
-            this.clearButton.Location = new System.Drawing.Point(298, 132);
+            this.clearButton.Location = new System.Drawing.Point(290, 231);
             this.clearButton.Name = "clearButton";
-            this.clearButton.Size = new System.Drawing.Size(75, 23);
+            this.clearButton.Size = new System.Drawing.Size(91, 23);
             this.clearButton.TabIndex = 27;
-            this.clearButton.Text = "Сбросить";
+            this.clearButton.Text = "Сбросить всё";
             this.clearButton.UseVisualStyleBackColor = true;
             this.clearButton.Click += new System.EventHandler(this.clearButton_Click);
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.label6.Location = new System.Drawing.Point(295, 71);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(78, 18);
+            this.label6.TabIndex = 28;
+            this.label6.Text = "градиента";
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.label7.Location = new System.Drawing.Point(298, 160);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(81, 18);
+            this.label7.TabIndex = 31;
+            this.label7.Text = "плотности";
+            // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.label8.Location = new System.Drawing.Point(302, 139);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(71, 18);
+            this.label8.TabIndex = 30;
+            this.label8.Text = "Апертура";
+            // 
+            // dencityUpDown
+            // 
+            this.dencityUpDown.Increment = new decimal(new int[] {
+            2,
+            0,
+            0,
+            0});
+            this.dencityUpDown.Location = new System.Drawing.Point(295, 185);
+            this.dencityUpDown.Maximum = new decimal(new int[] {
+            34,
+            0,
+            0,
+            0});
+            this.dencityUpDown.Minimum = new decimal(new int[] {
+            8,
+            0,
+            0,
+            0});
+            this.dencityUpDown.Name = "dencityUpDown";
+            this.dencityUpDown.Size = new System.Drawing.Size(86, 20);
+            this.dencityUpDown.TabIndex = 29;
+            this.dencityUpDown.Value = new decimal(new int[] {
+            16,
+            0,
+            0,
+            0});
+            this.dencityUpDown.ValueChanged += new System.EventHandler(this.dencityUpDown_ValueChanged);
             // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(699, 539);
+            this.Controls.Add(this.label7);
+            this.Controls.Add(this.label8);
+            this.Controls.Add(this.dencityUpDown);
+            this.Controls.Add(this.label6);
             this.Controls.Add(this.clearButton);
             this.Controls.Add(this.label5);
             this.Controls.Add(this.gradAreaUpDown);
@@ -310,6 +377,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.sourceImageBox)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.resultImageBox)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.gradAreaUpDown)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dencityUpDown)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -338,6 +406,10 @@
         private System.Windows.Forms.NumericUpDown gradAreaUpDown;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Button clearButton;
+        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.NumericUpDown dencityUpDown;
     }
 }
 

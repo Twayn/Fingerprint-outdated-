@@ -12,7 +12,7 @@ namespace NIR_WindowsForms
 {
     public partial class MainForm : Form
     {
-        private static Bitmap sourceImage = NIR_WindowsForms.Properties.Resources._2; //исходное изображение внедренное в ресурсы программы
+        private static Bitmap sourceImage = NIR_WindowsForms.Properties.Resources._3; //исходное изображение внедренное в ресурсы программы
 
         public MainForm()
         {
@@ -117,9 +117,16 @@ namespace NIR_WindowsForms
             Steps.setAreaGrad(Convert.ToInt32(gradAreaUpDown.Value));
         }
 
+
+
         private void clearButton_Click(object sender, EventArgs e)
         {
             init();
+        }
+
+        private void dencityUpDown_ValueChanged(object sender, EventArgs e)
+        {
+            Steps.setAreaDencity(Convert.ToInt32(dencityUpDown.Value));
         }
     }
 }
