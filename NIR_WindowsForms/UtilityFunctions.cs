@@ -314,21 +314,27 @@ namespace NIR_WindowsForms
             return resultImage;
         }
 
-        public static void ridgeDensity(int lineLength) {
+        public static void ridgeDensity(int lineLength)
+        {
 
-            for (int x = lineLength / 2; x < _width - lineLength / 2; x++) {
-                for (int y = lineLength / 2; y < _height - lineLength / 2; y++) {
+            for (int x = lineLength / 2; x < _width - lineLength / 2; x++)
+            {
+                for (int y = lineLength / 2; y < _height - lineLength / 2; y++)
+                {
                     double angle = areaAngle[x, y];
 
                     List<Coord> lineCoordinates = new List<Coord>();
 
-                    if (angle <= 180.0) {
+                    if (angle <= 180.0)
+                    {
                         lineCoordinates = getLine(
                          Convert.ToInt32(x + Trigon.cos(angle) * lineLength / 2),
                          Convert.ToInt32(y + Trigon.sin(angle) * lineLength / 2),
                          Convert.ToInt32(x + Trigon.cos(angle + 180) * lineLength / 2),
                          Convert.ToInt32(y + Trigon.sin(angle + 180) * lineLength / 2));
-                    } else {
+                    }
+                    else
+                    {
                         lineCoordinates = getLine(
                          Convert.ToInt32(x + Trigon.cos(angle) * lineLength / 2),
                          Convert.ToInt32(y + Trigon.sin(angle) * lineLength / 2),
@@ -338,12 +344,14 @@ namespace NIR_WindowsForms
 
                     List<int> maximas = new List<int>();
 
-                    for (int i = 1; i < lineCoordinates.Count - 1; i++) {
+                    for (int i = 1; i < lineCoordinates.Count - 1; i++)
+                    {
                         double left = sourceImage[lineCoordinates[i - 1].getX(), lineCoordinates[i - 1].getY()];
                         double center = sourceImage[lineCoordinates[i].getX(), lineCoordinates[i].getY()];
                         double right = sourceImage[lineCoordinates[i + 1].getX(), lineCoordinates[i + 1].getY()];
 
-                        if (center > left && center > right) {
+                        if (center < left && center < right)
+                        {
                             maximas.Add(i);
                         }
                     }
@@ -352,7 +360,8 @@ namespace NIR_WindowsForms
                     int delimeter = maximas.Count - 1;
                     int divider = 0;
 
-                    for (int i = 0; i < maximas.Count - 1; i++) {
+                    for (int i = 0; i < maximas.Count - 1; i++)
+                    {
                         divider += Math.Abs(maximas[i] - maximas[i + 1]);
                     }
 
@@ -368,10 +377,10 @@ namespace NIR_WindowsForms
 
         //public static Bitmap oneRidgeDensity()
         //{
-        //    int lineLength = 20;
+        //    int lineLength = 16;
 
-        //    int x = 100;
-        //    int y = 100;
+        //    int x = 221;
+        //    int y = 63;
         //    double angle = areaAngle[x, y];
 
         //    Bitmap b = Picture.drawImage(sourceImage);
@@ -380,72 +389,73 @@ namespace NIR_WindowsForms
         //    //{
         //    //    for (int y = lineLength / 2; y < _height - lineLength / 2; y++)
         //    //    {
-                    
-        //            List<Coord> lineCoordinates = new List<Coord>();
 
-        //            if (angle <= 180.0)
-        //            {
-        //                lineCoordinates = getLine(
-        //                 Convert.ToInt32(x + Trigon.cos(angle) * lineLength / 2),
-        //                 Convert.ToInt32(y + Trigon.sin(angle) * lineLength / 2),
-        //                 Convert.ToInt32(x + Trigon.cos(angle + 180) * lineLength / 2),
-        //                 Convert.ToInt32(y + Trigon.sin(angle + 180) * lineLength / 2), b);
-        //            }
-        //            else
-        //            {
-        //                lineCoordinates = getLine(
-        //                 Convert.ToInt32(x + Trigon.cos(angle) * lineLength / 2),
-        //                 Convert.ToInt32(y + Trigon.sin(angle) * lineLength / 2),
-        //                 Convert.ToInt32(x + Trigon.cos(angle - 180) * lineLength / 2),
-        //                 Convert.ToInt32(y + Trigon.sin(angle - 180) * lineLength / 2), b);
-        //            }
+        //    List<Coord> lineCoordinates = new List<Coord>();
 
-        //            foreach (Coord c in lineCoordinates) {
-        //                Console.WriteLine("X: " + c.getX() + " Y: " + c.getY() + " BRIGHTNESS: " + sourceImage[c.getX(), c.getY()]);
-        //            }
+        //    if (angle <= 180.0)
+        //    {
+        //        lineCoordinates = getLine(
+        //         Convert.ToInt32(x + Trigon.cos(angle) * lineLength / 2),
+        //         Convert.ToInt32(y + Trigon.sin(angle) * lineLength / 2),
+        //         Convert.ToInt32(x + Trigon.cos(angle + 180) * lineLength / 2),
+        //         Convert.ToInt32(y + Trigon.sin(angle + 180) * lineLength / 2), b);
+        //    }
+        //    else
+        //    {
+        //        lineCoordinates = getLine(
+        //         Convert.ToInt32(x + Trigon.cos(angle) * lineLength / 2),
+        //         Convert.ToInt32(y + Trigon.sin(angle) * lineLength / 2),
+        //         Convert.ToInt32(x + Trigon.cos(angle - 180) * lineLength / 2),
+        //         Convert.ToInt32(y + Trigon.sin(angle - 180) * lineLength / 2), b);
+        //    }
 
-        //            List<int> maximas = new List<int>();
+        //    foreach (Coord c in lineCoordinates)
+        //    {
+        //        Console.WriteLine("X: " + c.getX() + " Y: " + c.getY() + " BRIGHTNESS: " + sourceImage[c.getX(), c.getY()]);
+        //    }
 
-        //            for (int i = 1; i < lineCoordinates.Count - 1; i++)
-        //            {
-        //                double left = sourceImage[lineCoordinates[i - 1].getX(), lineCoordinates[i - 1].getY()];
-        //                double center = sourceImage[lineCoordinates[i].getX(), lineCoordinates[i].getY()];
-        //                double right = sourceImage[lineCoordinates[i + 1].getX(), lineCoordinates[i + 1].getY()];
+        //    List<int> maximas = new List<int>();
 
-        //                if (center > left && center > right)
-        //                {
-        //                    maximas.Add(i);
-        //                    Console.WriteLine(center);
-        //                }
-        //            }
+        //    for (int i = 1; i < lineCoordinates.Count - 1; i++)
+        //    {
+        //        double left = sourceImage[lineCoordinates[i - 1].getX(), lineCoordinates[i - 1].getY()];
+        //        double center = sourceImage[lineCoordinates[i].getX(), lineCoordinates[i].getY()];
+        //        double right = sourceImage[lineCoordinates[i + 1].getX(), lineCoordinates[i + 1].getY()];
 
-        //            foreach (var v in maximas)
-        //            {
-        //                Console.WriteLine("MAX: " + v);
-        //            }
+        //        if (center < left && center < right)
+        //        {
+        //            maximas.Add(i);
+        //            Console.WriteLine(center);
+        //        }
+        //    }
+
+        //    foreach (var v in maximas)
+        //    {
+        //        Console.WriteLine("MAX: " + v);
+        //    }
 
 
-        //            int delimeter = maximas.Count - 1;
-        //            int divider = 0;
+        //    int delimeter = maximas.Count - 1;
+        //    int divider = 0;
 
-        //            for (int i = 0; i < maximas.Count - 1; i++)
-        //            {
-        //                divider += Math.Abs(maximas[i] - maximas[i + 1]);
-        //            }
+        //    for (int i = 0; i < maximas.Count - 1; i++)
+        //    {
+        //        divider += Math.Abs(maximas[i] - maximas[i + 1]);
+        //    }
 
-        //            double dencity = (double)delimeter / divider;
-                   
-        //            if (divider == 0) { dencity = 1; }
+        //    double dencity = (double)delimeter / divider;
 
-        //            Console.WriteLine("delimeter" + delimeter);
-        //            Console.WriteLine("divider" + divider);
-        //            Console.WriteLine("result" + dencity);
-                    
+        //    if (divider == 0) { dencity = 1; }
+
+        //    Console.WriteLine("delimeter" + delimeter);
+        //    Console.WriteLine("divider" + divider);
+        //    Console.WriteLine("result" + dencity);
+
 
         //    //    }
         //    //}
 
-        //            return b;
+        //    return b;
         //}
 
         //Bresenham's line algorithm

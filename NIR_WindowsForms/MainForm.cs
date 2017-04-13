@@ -12,7 +12,10 @@ namespace NIR_WindowsForms
 {
     public partial class MainForm : Form
     {
-        private static Bitmap sourceImage = NIR_WindowsForms.Properties.Resources._3; //исходное изображение внедренное в ресурсы программы
+        private static Bitmap sourceImage = NIR_WindowsForms.Properties.Resources._2; //исходное изображение внедренное в ресурсы программы
+        /*Проблемы, когда центр сканируемой линии в центре черной линии
+         Предложения: бинаризовать, сканировать переходы - белый <> черный
+         Либо сканировать резкие перепады градиента, например >=50*/
 
         public MainForm()
         {
@@ -116,8 +119,6 @@ namespace NIR_WindowsForms
         {
             Steps.setAreaGrad(Convert.ToInt32(gradAreaUpDown.Value));
         }
-
-
 
         private void clearButton_Click(object sender, EventArgs e)
         {
