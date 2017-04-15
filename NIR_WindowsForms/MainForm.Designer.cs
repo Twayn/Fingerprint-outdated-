@@ -334,7 +334,7 @@
             this.dencityUpDown.Size = new System.Drawing.Size(86, 20);
             this.dencityUpDown.TabIndex = 29;
             this.dencityUpDown.Value = new decimal(new int[] {
-            16,
+            24,
             0,
             0,
             0});

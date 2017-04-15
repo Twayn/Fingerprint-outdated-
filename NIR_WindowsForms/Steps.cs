@@ -11,7 +11,7 @@ namespace NIR_WindowsForms
         private static Bitmap[] images = new Bitmap[50];
 
         private static int areaGrad = 9;
-        private static int areaDencity = 16;
+        private static int areaDencity = 22;
 
         public static void setAreaGrad(int area) {
             areaGrad = area;
