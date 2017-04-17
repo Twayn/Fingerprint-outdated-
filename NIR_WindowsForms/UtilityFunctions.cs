@@ -33,6 +33,7 @@ namespace NIR_WindowsForms
         private static double[,] areaCohMax;
 
         private static double[,] density;
+        private static double[,] averageDensity;
 
         public static void setInitialData(Bitmap image)
         {
@@ -70,6 +71,7 @@ namespace NIR_WindowsForms
             }
 
             density = new double[_width, _height];
+            averageDensity = new double[_width, _height];
         }
 
         /*Module and argument of gradient (at point)*/
@@ -244,9 +246,14 @@ namespace NIR_WindowsForms
             return Picture.drawImage(areaCohMax);
         }
 
-        public static Bitmap aDencity()
+        public static Bitmap pDencity()
         {
             return Picture.drawImage(density);
+        }
+
+        public static Bitmap aDencity()
+        {
+            return Picture.drawImage(averageDensity);
         }
 
         public static Bitmap directionField(){
@@ -351,6 +358,26 @@ namespace NIR_WindowsForms
             }
         }
 
+        /*Average dencity (at area)*/
+        public static void areaRidgeDencity(int size){
+
+            int outer = (size + 1) / 2;
+            int inner = (size - 1) / 2;
+
+            for (int x = outer; x < _width - outer; x++){
+                for (int y = outer; y < _height - outer; y++){
+                    double averDencity = 0;
+
+                    for (int w = x - inner; w < x + inner; w++){
+                        for (int z = y - inner; z < y + inner; z++){
+                            averDencity += density[w, z];
+                        }
+                    }
+                    averageDensity[x, y] = averDencity/(size*size);
+                }
+            }
+        }
+
         //private static double calcDencity(List<Coord> lineCoordinates)
         //{
         //    List<int> maximas = new List<int>();
@@ -405,8 +432,8 @@ namespace NIR_WindowsForms
 
         private static double calcDencity(List<Coord> lineCoordinates){
             List<int> maximas = new List<int>();
-
             List<double> derivative = new List<double>();
+            List<double> amplitude = new List<double>();
 
             for (int i = 1; i < lineCoordinates.Count - 1; i++)
             {
@@ -429,6 +456,7 @@ namespace NIR_WindowsForms
                 if (center > left && center > right && center > 20)
                 {
                     maximas.Add(i);
+                    amplitude.Add(center);
                 }
             }
 
@@ -444,11 +472,15 @@ namespace NIR_WindowsForms
                 divider += Math.Abs(maximas[i] - maximas[i + 1]);
             }
 
-            double dencity = (double)delimeter / divider;
-            //Console.WriteLine(dencity);
-
+            double dencity = (double)delimeter / divider; //Period
+           
             if (divider == 0) { dencity = 1; }
 
+            file.WriteLine("DENC: " + dencity);
+            if (amplitude.Count != 0) {
+                file.WriteLine("AMPL MIN: " + amplitude.Min());
+            }
+            
             return dencity;
         }
 

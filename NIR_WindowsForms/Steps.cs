@@ -46,8 +46,10 @@ namespace NIR_WindowsForms
                     return new Bitmap(10, 10);
                 case 8:
                     UtilityFunctions.ridgeDensity(areaDencity);
+                    return UtilityFunctions.pDencity();
+                case 9:
+                    UtilityFunctions.areaRidgeDencity(3);
                     return UtilityFunctions.aDencity();
-                    //return UtilityFunctions.oneRidgeDensity();
                 default:
                     return new Bitmap(10, 10);
             }

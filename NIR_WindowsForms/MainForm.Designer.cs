@@ -111,7 +111,8 @@
             "Когеррентность",
             "Когеррентность (минимум)",
             "Когеррентность (максимум)",
-            "Плотность линий"});
+            "Плотность линий",
+            "Плотность линий (средняя)"});
             this.menuBox.Location = new System.Drawing.Point(395, 467);
             this.menuBox.Name = "menuBox";
             this.menuBox.Size = new System.Drawing.Size(256, 28);
