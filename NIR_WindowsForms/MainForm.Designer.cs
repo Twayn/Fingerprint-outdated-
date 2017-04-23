@@ -361,7 +361,7 @@
             chartArea1.Position.Width = 100F;
             chartArea1.Position.Y = 3F;
             this.histogram.ChartAreas.Add(chartArea1);
-            this.histogram.Location = new System.Drawing.Point(725, 44);
+            this.histogram.Location = new System.Drawing.Point(693, 44);
             this.histogram.Name = "histogram";
             series1.ChartArea = "ChartArea1";
             series1.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Area;
@@ -387,7 +387,7 @@
             // 
             // histButton
             // 
-            this.histButton.Location = new System.Drawing.Point(867, 467);
+            this.histButton.Location = new System.Drawing.Point(831, 467);
             this.histButton.Name = "histButton";
             this.histButton.Size = new System.Drawing.Size(144, 23);
             this.histButton.TabIndex = 33;
@@ -399,7 +399,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1171, 539);
+            this.ClientSize = new System.Drawing.Size(1108, 539);
             this.Controls.Add(this.histButton);
             this.Controls.Add(this.histogram);
             this.Controls.Add(this.label7);

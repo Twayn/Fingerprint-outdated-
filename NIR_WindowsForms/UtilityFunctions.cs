@@ -68,10 +68,8 @@ namespace NIR_WindowsForms
             areaCohMin = new double[_width, _height];
             areaCohMax = new double[_width, _height];
 
-            for (int x = 0; x < _width; x++)
-            {
-                for (int y = 0; y < _height; y++)
-                {
+            for (int x = 0; x < _width; x++){
+                for (int y = 0; y < _height; y++){
                     areaCohMin[x, y] = 1;
                 }
             }
@@ -107,7 +105,6 @@ namespace NIR_WindowsForms
 
                     pointModule[x, y] = Math.Sqrt(gx * gx + gy * gy);
                     pointAngle[x, y] = Trigon.atanDouble(gy, gx);
-                    //pointAngle[x, y] = Trigon.atanInt((int)Math.Ceiling(gy), (int)Math.Ceiling(gx));
                 }
             }
         }
@@ -141,8 +138,6 @@ namespace NIR_WindowsForms
                     } else {
                         areaCoh[x, y] = areaModule[x, y] / sumModules;
                     }
-                    
-                    //areaAngle[x, y] = Trigon.atanInt((int)Math.Ceiling(sumY), (int)Math.Ceiling(sumX)) / 2;
                 }
             }
         }
@@ -187,44 +182,6 @@ namespace NIR_WindowsForms
             }
             return (Math.Sqrt(sumX * sumX + sumY * sumY) / sumModules);
         }
-
-        //public static double cohArea(int size, int x, int y) {
-        //    double sumX = 0;
-        //    double sumY = 0;
-        //    double sumModules = 0;
-
-        //    if (size % 2 == 0)
-        //    {
-        //        int area = size / 2;
-
-        //        for (int w = x - area; w < x + area-1; w++)
-        //        {
-        //            for (int z = y - area; z < y + area-1; z++)
-        //            {
-        //                sumX += pointModule[w, z] * Trigon.cos(2 * pointAngle[w, z]);
-        //                sumY += pointModule[w, z] * Trigon.sin(2 * pointAngle[w, z]);
-
-        //                sumModules += pointModule[w, z];
-        //            }
-        //        }
-        //    }
-        //    else {
-        //        int area = (size - 1) / 2;
-
-        //        for (int w = x - area; w < x + area; w++)
-        //        {
-        //            for (int z = y - area; z < y + area; z++)
-        //            {
-        //                sumX += pointModule[w, z] * Trigon.cos(2 * pointAngle[w, z]);
-        //                sumY += pointModule[w, z] * Trigon.sin(2 * pointAngle[w, z]);
-
-        //                sumModules += pointModule[w, z];
-        //            }
-        //        }
-        //    }
-        //    //Coherence
-        //    return (Math.Sqrt(sumX * sumX + sumY * sumY) / sumModules);
-        //}
 
         public static Bitmap pModule(){
             return Picture.drawImage(pointModule);
@@ -325,21 +282,21 @@ namespace NIR_WindowsForms
             }
             equalizer = 1 / equalizer;
 
-            for (int x = 1; x < image.Width - 1; x++)
+            for (int x = 1; x < _width - 1; x++)
             {
-                for (int y = 1; y < image.Height - 1; y++)
+                for (int y = 1; y < _height - 1; y++)
                 {
                     double color = 0;
 
-                    color += image.GetPixel(x - 1, y - 1).GetBrightness() * 255 * filter[0] * equalizer;
-                    color += image.GetPixel(x - 1, y).GetBrightness() * 255 * filter[1] * equalizer;
-                    color += image.GetPixel(x - 1, y + 1).GetBrightness() * 255 * filter[2] * equalizer;
-                    color += image.GetPixel(x, y - 1).GetBrightness() * 255 * filter[3] * equalizer;
-                    color += image.GetPixel(x, y).GetBrightness() * 255 * filter[4] * equalizer;
-                    color += image.GetPixel(x, y + 1).GetBrightness() * 255 * filter[5] * equalizer;
-                    color += image.GetPixel(x + 1, y - 1).GetBrightness() * 255 * filter[6] * equalizer;
-                    color += image.GetPixel(x + 1, y).GetBrightness() * 255 * filter[7] * equalizer;
-                    color += image.GetPixel(x + 1, y + 1).GetBrightness() * 255 * filter[8] * equalizer;
+                    color += sourceImage[x - 1, y - 1] * filter[0] * equalizer;
+                    color += sourceImage[x - 1, y] * filter[1] * equalizer;
+                    color += sourceImage[x - 1, y + 1] * filter[2] * equalizer;
+                    color += sourceImage[x, y - 1] * filter[3] * equalizer;
+                    color += sourceImage[x, y] * filter[4] * equalizer;
+                    color += sourceImage[x, y + 1] * filter[5] * equalizer;
+                    color += sourceImage[x + 1, y - 1] * filter[6] * equalizer;
+                    color += sourceImage[x + 1, y] * filter[7] * equalizer;
+                    color += sourceImage[x + 1, y + 1] * filter[8] * equalizer;
 
                     Color averageColor = Color.FromArgb(Convert.ToInt32(color), Convert.ToInt32(color), Convert.ToInt32(color));
                     resultImage.SetPixel(x, y, averageColor);
@@ -349,59 +306,48 @@ namespace NIR_WindowsForms
             return resultImage;
         }
 
-        public static void veronicaBlur()
-        {
+        public static void veronicaBlur(){
             double equalizer = 0;
 
-            for (int i = 0; i < filter.Length; i++)
-            {
+            for (int i = 0; i < filter.Length; i++){
                 equalizer += filter[i];
             }
             equalizer = 1 / equalizer;
 
-            for (int x = 1; x < _width - 1; x++)
-            {
-                for (int y = 1; y < _height - 1; y++)
-                {
+            for (int x = 1; x < _width - 1; x++) {
+                for (int y = 1; y < _height - 1; y++) {
                     double color = 0;
 
-                    color += qualityDencity[x - 1, y - 1] * filter[0] * equalizer;
-                    color += qualityDencity[x - 1, y] * filter[1] * equalizer;
-                    color += qualityDencity[x - 1, y + 1] * filter[2] * equalizer;
-                    color += qualityDencity[x, y - 1] * filter[3] * equalizer;
-                    color += qualityDencity[x, y] * filter[4] * equalizer;
-                    color += qualityDencity[x, y + 1] * filter[5] * equalizer;
-                    color += qualityDencity[x + 1, y - 1] * filter[6] * equalizer;
-                    color += qualityDencity[x + 1, y] * filter[7] * equalizer;
-                    color += qualityDencity[x + 1, y + 1] * filter[8] * equalizer;
+                    color += qualityAreaDencity[x - 1, y - 1] * filter[0] * equalizer;
+                    color += qualityAreaDencity[x - 1, y] * filter[1] * equalizer;
+                    color += qualityAreaDencity[x - 1, y + 1] * filter[2] * equalizer;
+                    color += qualityAreaDencity[x, y - 1] * filter[3] * equalizer;
+                    color += qualityAreaDencity[x, y] * filter[4] * equalizer;
+                    color += qualityAreaDencity[x, y + 1] * filter[5] * equalizer;
+                    color += qualityAreaDencity[x + 1, y - 1] * filter[6] * equalizer;
+                    color += qualityAreaDencity[x + 1, y] * filter[7] * equalizer;
+                    color += qualityAreaDencity[x + 1, y + 1] * filter[8] * equalizer;
 
                     verBlur[x, y] = color;
                 }
             }
         }
 
-        public static void ridgeDensity(int lineLength)
-        {
-
-            for (int x = lineLength / 2; x < _width - lineLength / 2; x++)
-            {
-                for (int y = lineLength / 2; y < _height - lineLength / 2; y++)
-                {
+        public static void ridgeDensity(int lineLength) {
+            for (int x = lineLength / 2; x < _width - lineLength / 2; x++) {
+                for (int y = lineLength / 2; y < _height - lineLength / 2; y++) {
                     double angle = areaAngle[x, y];
-
                     List<Coord> lineCoordinates = new List<Coord>();
 
-                    if (angle <= 180.0)
-                    {
-                        lineCoordinates = getLine(
+                    if (angle <= 180.0) {
+                        lineCoordinates = Picture.getLine(
                          Convert.ToInt32(x + Trigon.cos(angle) * lineLength / 2),
                          Convert.ToInt32(y + Trigon.sin(angle) * lineLength / 2),
                          Convert.ToInt32(x + Trigon.cos(angle + 180) * lineLength / 2),
                          Convert.ToInt32(y + Trigon.sin(angle + 180) * lineLength / 2));
                     }
-                    else
-                    {
-                        lineCoordinates = getLine(
+                    else {
+                        lineCoordinates = Picture.getLine(
                          Convert.ToInt32(x + Trigon.cos(angle) * lineLength / 2),
                          Convert.ToInt32(y + Trigon.sin(angle) * lineLength / 2),
                          Convert.ToInt32(x + Trigon.cos(angle - 180) * lineLength / 2),
@@ -409,7 +355,7 @@ namespace NIR_WindowsForms
                     }
                    
                     density[x, y] = calcDencity(lineCoordinates, x, y);
-                    file.WriteLine("X: " + x + "; Y: " + y + "; DENS: " + density[x, y]);
+                    //file.WriteLine("X: " + x + "; Y: " + y + "; DENS: " + density[x, y]);
                 }
             }
         }
@@ -472,9 +418,9 @@ namespace NIR_WindowsForms
                 derivative.Add(right-left);
             }
 
-            foreach (var v in derivative) {
-                file.WriteLine("deriviative: " + v);
-            }
+            //foreach (var v in derivative) {
+            //    file.WriteLine("deriviative: " + v);
+            //}
 
             for (int i = 1; i < derivative.Count - 1; i++)
             {
@@ -489,10 +435,10 @@ namespace NIR_WindowsForms
                 }
             }
 
-            foreach (var v in maximas)
-            {
-                file.WriteLine("max: " + v);
-            }
+            //foreach (var v in maximas)
+            //{
+            //    file.WriteLine("max: " + v);
+            //}
 
             int delimeter = maximas.Count - 1;
             int divider = 0;
@@ -505,108 +451,13 @@ namespace NIR_WindowsForms
            
             if (divider == 0) { dencity = 1; }
 
-            file.WriteLine("DENC: " + dencity);
+            //file.WriteLine("DENC: " + dencity);
             if (amplitude.Count != 0) {
-                file.WriteLine("AMPL MIN: " + amplitude.Min());
+                //file.WriteLine("AMPL MIN: " + amplitude.Min());
                 qualityDencity[x,y] = amplitude.Min();
             }
             
             return dencity;
-        }
-
-        //Bresenham's line algorithm
-        private static List<Coord> getLine(int x1, int y1, int x2, int y2) {
-            List<Coord> coordinates = new List<Coord>();
-
-            Color red = Color.FromArgb(255, 0, 0);
-            int deltaX = Math.Abs(x2 - x1);
-            int deltaY = Math.Abs(y2 - y1);
-            int signX = x1 < x2 ? 1 : -1;
-            int signY = y1 < y2 ? 1 : -1;
-            
-            int error = deltaX - deltaY;
- 
-            while(x1 != x2 || y1 != y2) 
-            {
-                //image.SetPixel(x1, y1, red);
-                coordinates.Add(new Coord(x1, y1));
-
-                int error2 = error * 2;
-                
-                if(error2 > -deltaY) 
-                {
-                    error -= deltaY;
-                    x1 += signX;
-                }
-                if(error2 < deltaX) 
-                {
-                    error += deltaX;
-                    y1 += signY;
-                }
-            }
-
-            //image.SetPixel(x2, y2, red);
-            coordinates.Add(new Coord(x2, y2));
-
-            return coordinates;
-        }
-
-        public static int[] hist(Bitmap image_arg)
-        {
-            Bitmap image = new Bitmap(image_arg);
-
-            int[] hist = new int[image.Width];
-
-            for (int x = 11; x < image.Width-11; x++)
-            {
-                for (int y = 11; y < image.Height-11; y++)
-                {
-                    int i = Convert.ToInt32(image.GetPixel(x, y).GetBrightness() * 255);
-                    hist[i]++;
-                }
-            }
-
-            return hist;
-        }
-
-        public static Bitmap binary(Bitmap image, float division)
-        {
-            Bitmap resultImage = new Bitmap(image.Width, image.Height);
-            Color white = Color.FromArgb(255, 255, 255);
-            Color black = Color.FromArgb(0, 0, 0);
-            for (int x = 0; x < image.Width; x++)
-            {
-                for (int y = 0; y < image.Height; y++)
-                {
-                    if ((image.GetPixel(x, y).GetBrightness() * 255) > division)
-                    {
-                        resultImage.SetPixel(x, y, white);
-                    }
-                    else
-                    {
-                        resultImage.SetPixel(x, y, black);
-                    }
-                }
-            }
-
-            return resultImage;
-        }
-
-        private class Coord { 
-            private int x, y;
-
-            public Coord(int x, int y){
-                this.x = x;
-                this.y = y;
-            }
-
-            public int getX(){
-                return x;
-            }
-
-            public int getY(){
-                return y;
-            }
         }
     }
 }

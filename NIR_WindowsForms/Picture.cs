@@ -83,5 +83,65 @@ namespace NIR_WindowsForms
 
             return image;
         }
+
+        //Bresenham's line algorithm
+        public static List<Coord> getLine(int x1, int y1, int x2, int y2) {
+            List<Coord> coordinates = new List<Coord>();
+
+            Color red = Color.FromArgb(255, 0, 0);
+            int deltaX = Math.Abs(x2 - x1);
+            int deltaY = Math.Abs(y2 - y1);
+            int signX = x1 < x2 ? 1 : -1;
+            int signY = y1 < y2 ? 1 : -1;
+            
+            int error = deltaX - deltaY;
+ 
+            while(x1 != x2 || y1 != y2) {
+                coordinates.Add(new Coord(x1, y1));
+
+                int error2 = error * 2;
+                
+                if(error2 > -deltaY) {
+                    error -= deltaY;
+                    x1 += signX;
+                }
+                if(error2 < deltaX) {
+                    error += deltaX;
+                    y1 += signY;
+                }
+            }
+            coordinates.Add(new Coord(x2, y2));
+
+            return coordinates;
+        }
+
+        public static int[] hist(Bitmap image_arg) {
+            Bitmap image = new Bitmap(image_arg);
+            int[] hist = new int[image.Width];
+
+            for (int x = 11; x < image.Width - 11; x++) {
+                for (int y = 11; y < image.Height - 11; y++) {
+                    int i = Convert.ToInt32(image.GetPixel(x, y).GetBrightness() * 255);
+                    hist[i]++;
+                }
+            }
+            return hist;
+        }
+
+        public static Bitmap binary(Bitmap image, float division) {
+            Bitmap resultImage = new Bitmap(image.Width, image.Height);
+            Color white = Color.FromArgb(255, 255, 255);
+            Color black = Color.FromArgb(0, 0, 0);
+            for (int x = 0; x < image.Width; x++) {
+                for (int y = 0; y < image.Height; y++) {
+                    if ((image.GetPixel(x, y).GetBrightness() * 255) > division) {
+                        resultImage.SetPixel(x, y, white);
+                    } else {
+                        resultImage.SetPixel(x, y, black);
+                    }
+                }
+            }
+            return resultImage;
+        }
     }
 }

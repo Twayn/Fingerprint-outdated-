@@ -13,10 +13,7 @@ namespace NIR_WindowsForms
     public partial class MainForm : Form
     {
         private static Bitmap sourceImage = NIR_WindowsForms.Properties.Resources._2; //исходное изображение внедренное в ресурсы программы
-        /*Проблемы, когда центр сканируемой линии в центре черной линии
-         Предложения: бинаризовать, сканировать переходы - белый <> черный
-         Либо сканировать резкие перепады градиента, например >=50*/
-
+       
         public MainForm()
         {
             InitializeComponent();
@@ -138,30 +135,25 @@ namespace NIR_WindowsForms
             int sum = 0;
             float median = 0;
             int medianBright = 0;
-            int[] hist = UtilityFunctions.hist(image);
+            int[] hist = Picture.hist(image);
 
-            for (int i = 0; i < hist.Length; i++)
-            {
+            for (int i = 0; i < hist.Length; i++) {
                 sum += hist[i];
                 histogram.Series["Bright"].Points.AddXY(i, hist[i]);
             }
             median = sum / 2;
 
-            for (int i = 0; i < hist.Length; i++)
-            {
-                if (median > 0)
-                {
+            for (int i = 0; i < hist.Length; i++) {
+                if (median > 0) {
                     median -= hist[i];
                 }
-                if (median < 0)
-                {
+                if (median < 0) {
                     medianBright = i + 1;
                     break;
                 }
             }
-            Bitmap binaryImage = UtilityFunctions.binary(image, medianBright/4);
-            resultImageBox.Image = binaryImage;
-         
+
+            resultImageBox.Image = Picture.binary(image, medianBright / 4);
             MessageBox.Show("Median is: " + medianBright);
         }
     }
