@@ -13,6 +13,8 @@ namespace NIR_WindowsForms
 {
     class UtilityFunctions
     {
+        public static int[] filter;
+
         private static int _height;
         private static int _width;
 
@@ -34,6 +36,10 @@ namespace NIR_WindowsForms
 
         private static double[,] density;
         private static double[,] averageDensity;
+        private static double[,] qualityDencity;
+        private static double[,] qualityAreaDencity;
+
+        private static double[,] verBlur;
 
         public static void setInitialData(Bitmap image)
         {
@@ -70,8 +76,12 @@ namespace NIR_WindowsForms
                 }
             }
 
-            density = new double[_width, _height];
+            density = new double[_width, _height]; 
             averageDensity = new double[_width, _height];
+            qualityDencity = new double[_width, _height];
+            qualityAreaDencity = new double[_width, _height];
+
+            verBlur = new double[_width, _height];
         }
 
         /*Module and argument of gradient (at point)*/
@@ -256,6 +266,21 @@ namespace NIR_WindowsForms
             return Picture.drawImage(averageDensity);
         }
 
+        public static Bitmap qualityDenc()
+        {
+            return Picture.drawImage(qualityDencity);
+        }
+
+        public static Bitmap aQualityDenc()
+        {
+            return Picture.drawImage(qualityAreaDencity);
+        }
+
+        public static Bitmap hairVeronicaBlur()
+        {
+            return Picture.drawImage(verBlur);
+        }
+
         public static Bitmap directionField(){
             Bitmap image = new Bitmap(_width, _height);
             Pen blackPen = new Pen(Color.Black, 1);
@@ -300,28 +325,59 @@ namespace NIR_WindowsForms
             }
             equalizer = 1 / equalizer;
 
-                for (int x = 1; x < image.Width - 1; x++)
+            for (int x = 1; x < image.Width - 1; x++)
+            {
+                for (int y = 1; y < image.Height - 1; y++)
                 {
-                    for (int y = 1; y < image.Height - 1; y++)
-                    {
-                        double color = 0;
+                    double color = 0;
 
-                        color += image.GetPixel(x - 1, y - 1).GetBrightness() * 255 * filter[0] * equalizer;
-                        color += image.GetPixel(x - 1, y).GetBrightness() * 255 * filter[1] * equalizer;
-                        color += image.GetPixel(x - 1, y + 1).GetBrightness() * 255 * filter[2] * equalizer;
-                        color += image.GetPixel(x, y - 1).GetBrightness() * 255 * filter[3] * equalizer;
-                        color += image.GetPixel(x, y).GetBrightness() * 255 * filter[4] * equalizer;
-                        color += image.GetPixel(x, y + 1).GetBrightness() * 255 * filter[5] * equalizer;
-                        color += image.GetPixel(x + 1, y - 1).GetBrightness() * 255 * filter[6] * equalizer;
-                        color += image.GetPixel(x + 1, y).GetBrightness() * 255 * filter[7] * equalizer;
-                        color += image.GetPixel(x + 1, y + 1).GetBrightness() * 255 * filter[8] * equalizer;
+                    color += image.GetPixel(x - 1, y - 1).GetBrightness() * 255 * filter[0] * equalizer;
+                    color += image.GetPixel(x - 1, y).GetBrightness() * 255 * filter[1] * equalizer;
+                    color += image.GetPixel(x - 1, y + 1).GetBrightness() * 255 * filter[2] * equalizer;
+                    color += image.GetPixel(x, y - 1).GetBrightness() * 255 * filter[3] * equalizer;
+                    color += image.GetPixel(x, y).GetBrightness() * 255 * filter[4] * equalizer;
+                    color += image.GetPixel(x, y + 1).GetBrightness() * 255 * filter[5] * equalizer;
+                    color += image.GetPixel(x + 1, y - 1).GetBrightness() * 255 * filter[6] * equalizer;
+                    color += image.GetPixel(x + 1, y).GetBrightness() * 255 * filter[7] * equalizer;
+                    color += image.GetPixel(x + 1, y + 1).GetBrightness() * 255 * filter[8] * equalizer;
 
-                        Color averageColor = Color.FromArgb(Convert.ToInt32(color), Convert.ToInt32(color), Convert.ToInt32(color));
-                        resultImage.SetPixel(x, y, averageColor);
-                    }
+                    Color averageColor = Color.FromArgb(Convert.ToInt32(color), Convert.ToInt32(color), Convert.ToInt32(color));
+                    resultImage.SetPixel(x, y, averageColor);
                 }
+            }
 
             return resultImage;
+        }
+
+        public static void veronicaBlur()
+        {
+            double equalizer = 0;
+
+            for (int i = 0; i < filter.Length; i++)
+            {
+                equalizer += filter[i];
+            }
+            equalizer = 1 / equalizer;
+
+            for (int x = 1; x < _width - 1; x++)
+            {
+                for (int y = 1; y < _height - 1; y++)
+                {
+                    double color = 0;
+
+                    color += qualityDencity[x - 1, y - 1] * filter[0] * equalizer;
+                    color += qualityDencity[x - 1, y] * filter[1] * equalizer;
+                    color += qualityDencity[x - 1, y + 1] * filter[2] * equalizer;
+                    color += qualityDencity[x, y - 1] * filter[3] * equalizer;
+                    color += qualityDencity[x, y] * filter[4] * equalizer;
+                    color += qualityDencity[x, y + 1] * filter[5] * equalizer;
+                    color += qualityDencity[x + 1, y - 1] * filter[6] * equalizer;
+                    color += qualityDencity[x + 1, y] * filter[7] * equalizer;
+                    color += qualityDencity[x + 1, y + 1] * filter[8] * equalizer;
+
+                    verBlur[x, y] = color;
+                }
+            }
         }
 
         public static void ridgeDensity(int lineLength)
@@ -352,7 +408,7 @@ namespace NIR_WindowsForms
                          Convert.ToInt32(y + Trigon.sin(angle - 180) * lineLength / 2));
                     }
                    
-                    density[x, y] = calcDencity(lineCoordinates);
+                    density[x, y] = calcDencity(lineCoordinates, x, y);
                     file.WriteLine("X: " + x + "; Y: " + y + "; DENS: " + density[x, y]);
                 }
             }
@@ -378,59 +434,32 @@ namespace NIR_WindowsForms
             }
         }
 
-        //private static double calcDencity(List<Coord> lineCoordinates)
-        //{
-        //    List<int> maximas = new List<int>();
+        /*Max quality dencity (at area)*/
+        public static void areaQualityDenc(int size) {
+            int outer = (size + 1) / 2;
+            int inner = (size - 1) / 2;
 
-        //    List<double> derivative = new List<double>();
+            for (int x = outer; x < _width - outer; x++)
+            {
+                for (int y = outer; y < _height - outer; y++)
+                {
+                    double maxQuality = 0;
 
-        //    for (int i = 1; i < lineCoordinates.Count - 1; i++)
-        //    {
-        //        double left = pointModule[lineCoordinates[i - 1].getX(), lineCoordinates[i - 1].getY()];
-        //        double right = pointModule[lineCoordinates[i + 1].getX(), lineCoordinates[i + 1].getY()];
+                    for (int w = x - inner; w < x + inner; w++)
+                    {
+                        for (int z = y - inner; z < y + inner; z++)
+                        {
+                            if (qualityDencity[w, z] > maxQuality) {
+                                maxQuality = qualityDencity[w, z];
+                            }
+                        }
+                    }
+                    qualityAreaDencity[x, y] = maxQuality;
+                }
+            }
+        }
 
-        //        derivative.Add(right - left);
-        //    }
-
-        //    foreach (var v in derivative)
-        //    {
-        //        file.WriteLine("deriviative: " + v);
-        //    }
-
-        //    for (int i = 1; i < derivative.Count - 1; i++)
-        //    {
-        //        double left = derivative[i - 1];
-        //        double center = derivative[i];
-        //        double right = derivative[i + 1];
-
-        //        if (center > left && center > right && center > 20)
-        //        {
-        //            maximas.Add(i);
-        //        }
-        //    }
-
-        //    foreach (var v in maximas)
-        //    {
-        //        file.WriteLine("max: " + v);
-        //    }
-
-        //    int delimeter = maximas.Count - 1;
-        //    int divider = 0;
-
-        //    for (int i = 0; i < maximas.Count - 1; i++)
-        //    {
-        //        divider += Math.Abs(maximas[i] - maximas[i + 1]);
-        //    }
-
-        //    double dencity = (double)delimeter / divider;
-        //    //Console.WriteLine(dencity);
-
-        //    if (divider == 0) { dencity = 1; }
-
-        //    return dencity;
-        //}
-
-        private static double calcDencity(List<Coord> lineCoordinates){
+        private static double calcDencity(List<Coord> lineCoordinates, int x, int y){
             List<int> maximas = new List<int>();
             List<double> derivative = new List<double>();
             List<double> amplitude = new List<double>();
@@ -472,13 +501,14 @@ namespace NIR_WindowsForms
                 divider += Math.Abs(maximas[i] - maximas[i + 1]);
             }
 
-            double dencity = (double)delimeter / divider; //Period
+            double dencity = (double)delimeter / divider; //Frequency
            
             if (divider == 0) { dencity = 1; }
 
             file.WriteLine("DENC: " + dencity);
             if (amplitude.Count != 0) {
                 file.WriteLine("AMPL MIN: " + amplitude.Min());
+                qualityDencity[x,y] = amplitude.Min();
             }
             
             return dencity;
@@ -519,6 +549,47 @@ namespace NIR_WindowsForms
             coordinates.Add(new Coord(x2, y2));
 
             return coordinates;
+        }
+
+        public static int[] hist(Bitmap image_arg)
+        {
+            Bitmap image = new Bitmap(image_arg);
+
+            int[] hist = new int[image.Width];
+
+            for (int x = 11; x < image.Width-11; x++)
+            {
+                for (int y = 11; y < image.Height-11; y++)
+                {
+                    int i = Convert.ToInt32(image.GetPixel(x, y).GetBrightness() * 255);
+                    hist[i]++;
+                }
+            }
+
+            return hist;
+        }
+
+        public static Bitmap binary(Bitmap image, float division)
+        {
+            Bitmap resultImage = new Bitmap(image.Width, image.Height);
+            Color white = Color.FromArgb(255, 255, 255);
+            Color black = Color.FromArgb(0, 0, 0);
+            for (int x = 0; x < image.Width; x++)
+            {
+                for (int y = 0; y < image.Height; y++)
+                {
+                    if ((image.GetPixel(x, y).GetBrightness() * 255) > division)
+                    {
+                        resultImage.SetPixel(x, y, white);
+                    }
+                    else
+                    {
+                        resultImage.SetPixel(x, y, black);
+                    }
+                }
+            }
+
+            return resultImage;
         }
 
         private class Coord { 

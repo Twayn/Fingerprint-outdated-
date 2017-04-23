@@ -50,6 +50,14 @@ namespace NIR_WindowsForms
                 case 9:
                     UtilityFunctions.areaRidgeDencity(3);
                     return UtilityFunctions.aDencity();
+                case 10:
+                    return UtilityFunctions.qualityDenc();
+                case 11:
+                    UtilityFunctions.areaQualityDenc(5);
+                    return UtilityFunctions.aQualityDenc();
+                case 12:
+                    UtilityFunctions.veronicaBlur();
+                    return UtilityFunctions.hairVeronicaBlur();
                 default:
                     return new Bitmap(10, 10);
             }

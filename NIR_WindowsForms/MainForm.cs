@@ -23,6 +23,7 @@ namespace NIR_WindowsForms
             //init(Picture.generateTestImage(sourceImage.Width, sourceImage.Height), gauss);
             //init(sourceImage, gauss);
             init();
+            UtilityFunctions.filter = equal;
         }
 
         private void menuBox_SelectedIndexChanged(object sender, EventArgs e)
@@ -128,6 +129,40 @@ namespace NIR_WindowsForms
         private void dencityUpDown_ValueChanged(object sender, EventArgs e)
         {
             Steps.setAreaDencity(Convert.ToInt32(dencityUpDown.Value));
+        }
+
+        private void histButton_Click(object sender, EventArgs e)
+        {
+            Bitmap image = (Bitmap)resultImageBox.Image;
+
+            int sum = 0;
+            float median = 0;
+            int medianBright = 0;
+            int[] hist = UtilityFunctions.hist(image);
+
+            for (int i = 0; i < hist.Length; i++)
+            {
+                sum += hist[i];
+                histogram.Series["Bright"].Points.AddXY(i, hist[i]);
+            }
+            median = sum / 2;
+
+            for (int i = 0; i < hist.Length; i++)
+            {
+                if (median > 0)
+                {
+                    median -= hist[i];
+                }
+                if (median < 0)
+                {
+                    medianBright = i + 1;
+                    break;
+                }
+            }
+            Bitmap binaryImage = UtilityFunctions.binary(image, medianBright/4);
+            resultImageBox.Image = binaryImage;
+         
+            MessageBox.Show("Median is: " + medianBright);
         }
     }
 }

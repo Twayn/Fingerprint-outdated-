@@ -28,6 +28,11 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.Title title1 = new System.Windows.Forms.DataVisualization.Charting.Title();
+            System.Windows.Forms.DataVisualization.Charting.Title title2 = new System.Windows.Forms.DataVisualization.Charting.Title();
+            System.Windows.Forms.DataVisualization.Charting.Title title3 = new System.Windows.Forms.DataVisualization.Charting.Title();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.sourceImageBox = new System.Windows.Forms.PictureBox();
             this.resultImageBox = new System.Windows.Forms.PictureBox();
@@ -54,10 +59,13 @@
             this.label7 = new System.Windows.Forms.Label();
             this.label8 = new System.Windows.Forms.Label();
             this.dencityUpDown = new System.Windows.Forms.NumericUpDown();
+            this.histogram = new System.Windows.Forms.DataVisualization.Charting.Chart();
+            this.histButton = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.sourceImageBox)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.resultImageBox)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.gradAreaUpDown)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dencityUpDown)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.histogram)).BeginInit();
             this.SuspendLayout();
             // 
             // sourceImageBox
@@ -112,7 +120,10 @@
             "Когеррентность (минимум)",
             "Когеррентность (максимум)",
             "Плотность линий",
-            "Плотность линий (средняя)"});
+            "Плотность линий (средняя)",
+            "Волосы Вероники",
+            "Качество 2",
+            "Размытие Вероники"});
             this.menuBox.Location = new System.Drawing.Point(395, 467);
             this.menuBox.Name = "menuBox";
             this.menuBox.Size = new System.Drawing.Size(256, 28);
@@ -199,7 +210,7 @@
             "Без размытия",
             "Равномерный",
             "Взвешенный"});
-            this.filterComboBox.Location = new System.Drawing.Point(167, 455);
+            this.filterComboBox.Location = new System.Drawing.Point(186, 443);
             this.filterComboBox.Name = "filterComboBox";
             this.filterComboBox.Size = new System.Drawing.Size(111, 26);
             this.filterComboBox.TabIndex = 16;
@@ -227,9 +238,9 @@
             // 
             // blurButton
             // 
-            this.blurButton.Location = new System.Drawing.Point(185, 493);
+            this.blurButton.Location = new System.Drawing.Point(185, 476);
             this.blurButton.Name = "blurButton";
-            this.blurButton.Size = new System.Drawing.Size(75, 23);
+            this.blurButton.Size = new System.Drawing.Size(109, 23);
             this.blurButton.TabIndex = 24;
             this.blurButton.Text = "Размыть";
             this.blurButton.UseVisualStyleBackColor = true;
@@ -341,11 +352,56 @@
             0});
             this.dencityUpDown.ValueChanged += new System.EventHandler(this.dencityUpDown_ValueChanged);
             // 
+            // histogram
+            // 
+            chartArea1.BorderWidth = 0;
+            chartArea1.Name = "ChartArea1";
+            chartArea1.Position.Auto = false;
+            chartArea1.Position.Height = 96F;
+            chartArea1.Position.Width = 100F;
+            chartArea1.Position.Y = 3F;
+            this.histogram.ChartAreas.Add(chartArea1);
+            this.histogram.Location = new System.Drawing.Point(725, 44);
+            this.histogram.Name = "histogram";
+            series1.ChartArea = "ChartArea1";
+            series1.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Area;
+            series1.Name = "Bright";
+            this.histogram.Series.Add(series1);
+            this.histogram.Size = new System.Drawing.Size(399, 364);
+            this.histogram.TabIndex = 32;
+            this.histogram.Text = "histogram";
+            title1.DockingOffset = -2;
+            title1.Name = "Title1";
+            title1.Text = "Гистограмма";
+            title2.Docking = System.Windows.Forms.DataVisualization.Charting.Docking.Left;
+            title2.DockingOffset = -2;
+            title2.Name = "Title2";
+            title2.Text = "Number of pixels";
+            title3.Docking = System.Windows.Forms.DataVisualization.Charting.Docking.Bottom;
+            title3.DockingOffset = 3;
+            title3.Name = "Title3";
+            title3.Text = "Brightness";
+            this.histogram.Titles.Add(title1);
+            this.histogram.Titles.Add(title2);
+            this.histogram.Titles.Add(title3);
+            // 
+            // histButton
+            // 
+            this.histButton.Location = new System.Drawing.Point(867, 467);
+            this.histButton.Name = "histButton";
+            this.histButton.Size = new System.Drawing.Size(144, 23);
+            this.histButton.TabIndex = 33;
+            this.histButton.Text = "Построить гистограмму";
+            this.histButton.UseVisualStyleBackColor = true;
+            this.histButton.Click += new System.EventHandler(this.histButton_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(699, 539);
+            this.ClientSize = new System.Drawing.Size(1171, 539);
+            this.Controls.Add(this.histButton);
+            this.Controls.Add(this.histogram);
             this.Controls.Add(this.label7);
             this.Controls.Add(this.label8);
             this.Controls.Add(this.dencityUpDown);
@@ -379,6 +435,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.resultImageBox)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.gradAreaUpDown)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dencityUpDown)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.histogram)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -411,6 +468,8 @@
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.NumericUpDown dencityUpDown;
+        private System.Windows.Forms.DataVisualization.Charting.Chart histogram;
+        private System.Windows.Forms.Button histButton;
     }
 }
 
