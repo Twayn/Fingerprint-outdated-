@@ -34,8 +34,6 @@
             System.Windows.Forms.DataVisualization.Charting.Title title2 = new System.Windows.Forms.DataVisualization.Charting.Title();
             System.Windows.Forms.DataVisualization.Charting.Title title3 = new System.Windows.Forms.DataVisualization.Charting.Title();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
-            this.sourceImageBox = new System.Windows.Forms.PictureBox();
-            this.resultImageBox = new System.Windows.Forms.PictureBox();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.menuBox = new System.Windows.Forms.ComboBox();
@@ -61,36 +59,20 @@
             this.dencityUpDown = new System.Windows.Forms.NumericUpDown();
             this.histogram = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.histButton = new System.Windows.Forms.Button();
-            ((System.ComponentModel.ISupportInitialize)(this.sourceImageBox)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.resultImageBox)).BeginInit();
+            this.resultImageBox = new System.Windows.Forms.PictureBox();
+            this.sourceImageBox = new System.Windows.Forms.PictureBox();
             ((System.ComponentModel.ISupportInitialize)(this.gradAreaUpDown)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dencityUpDown)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.histogram)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.resultImageBox)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.sourceImageBox)).BeginInit();
             this.SuspendLayout();
-            // 
-            // sourceImageBox
-            // 
-            this.sourceImageBox.ImageLocation = "";
-            this.sourceImageBox.InitialImage = null;
-            this.sourceImageBox.Location = new System.Drawing.Point(22, 40);
-            this.sourceImageBox.Name = "sourceImageBox";
-            this.sourceImageBox.Size = new System.Drawing.Size(256, 364);
-            this.sourceImageBox.TabIndex = 0;
-            this.sourceImageBox.TabStop = false;
-            // 
-            // resultImageBox
-            // 
-            this.resultImageBox.Location = new System.Drawing.Point(395, 44);
-            this.resultImageBox.Name = "resultImageBox";
-            this.resultImageBox.Size = new System.Drawing.Size(256, 364);
-            this.resultImageBox.TabIndex = 1;
-            this.resultImageBox.TabStop = false;
             // 
             // label1
             // 
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.label1.Location = new System.Drawing.Point(60, 10);
+            this.label1.Location = new System.Drawing.Point(50, 10);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(186, 20);
             this.label1.TabIndex = 2;
@@ -100,7 +82,7 @@
             // 
             this.label2.AutoSize = true;
             this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.label2.Location = new System.Drawing.Point(416, 9);
+            this.label2.Location = new System.Drawing.Point(426, 9);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(215, 20);
             this.label2.TabIndex = 3;
@@ -124,7 +106,7 @@
             "Волосы Вероники",
             "Качество 2",
             "Размытие Вероники"});
-            this.menuBox.Location = new System.Drawing.Point(395, 467);
+            this.menuBox.Location = new System.Drawing.Point(402, 467);
             this.menuBox.Name = "menuBox";
             this.menuBox.Size = new System.Drawing.Size(256, 28);
             this.menuBox.TabIndex = 12;
@@ -132,7 +114,7 @@
             // 
             // maskedTextBox1
             // 
-            this.maskedTextBox1.Location = new System.Drawing.Point(23, 444);
+            this.maskedTextBox1.Location = new System.Drawing.Point(18, 444);
             this.maskedTextBox1.Mask = "0";
             this.maskedTextBox1.Name = "maskedTextBox1";
             this.maskedTextBox1.Size = new System.Drawing.Size(36, 20);
@@ -140,7 +122,7 @@
             // 
             // maskedTextBox2
             // 
-            this.maskedTextBox2.Location = new System.Drawing.Point(73, 444);
+            this.maskedTextBox2.Location = new System.Drawing.Point(68, 444);
             this.maskedTextBox2.Mask = "0";
             this.maskedTextBox2.Name = "maskedTextBox2";
             this.maskedTextBox2.Size = new System.Drawing.Size(36, 20);
@@ -148,7 +130,7 @@
             // 
             // maskedTextBox3
             // 
-            this.maskedTextBox3.Location = new System.Drawing.Point(125, 444);
+            this.maskedTextBox3.Location = new System.Drawing.Point(120, 444);
             this.maskedTextBox3.Mask = "0";
             this.maskedTextBox3.Name = "maskedTextBox3";
             this.maskedTextBox3.Size = new System.Drawing.Size(36, 20);
@@ -156,7 +138,7 @@
             // 
             // maskedTextBox4
             // 
-            this.maskedTextBox4.Location = new System.Drawing.Point(23, 475);
+            this.maskedTextBox4.Location = new System.Drawing.Point(18, 475);
             this.maskedTextBox4.Mask = "0";
             this.maskedTextBox4.Name = "maskedTextBox4";
             this.maskedTextBox4.Size = new System.Drawing.Size(36, 20);
@@ -164,7 +146,7 @@
             // 
             // maskedTextBox5
             // 
-            this.maskedTextBox5.Location = new System.Drawing.Point(73, 475);
+            this.maskedTextBox5.Location = new System.Drawing.Point(68, 475);
             this.maskedTextBox5.Mask = "0";
             this.maskedTextBox5.Name = "maskedTextBox5";
             this.maskedTextBox5.Size = new System.Drawing.Size(36, 20);
@@ -172,7 +154,7 @@
             // 
             // maskedTextBox6
             // 
-            this.maskedTextBox6.Location = new System.Drawing.Point(125, 475);
+            this.maskedTextBox6.Location = new System.Drawing.Point(120, 475);
             this.maskedTextBox6.Mask = "0";
             this.maskedTextBox6.Name = "maskedTextBox6";
             this.maskedTextBox6.Size = new System.Drawing.Size(36, 20);
@@ -180,7 +162,7 @@
             // 
             // maskedTextBox7
             // 
-            this.maskedTextBox7.Location = new System.Drawing.Point(23, 507);
+            this.maskedTextBox7.Location = new System.Drawing.Point(18, 507);
             this.maskedTextBox7.Mask = "0";
             this.maskedTextBox7.Name = "maskedTextBox7";
             this.maskedTextBox7.Size = new System.Drawing.Size(36, 20);
@@ -188,7 +170,7 @@
             // 
             // maskedTextBox8
             // 
-            this.maskedTextBox8.Location = new System.Drawing.Point(73, 507);
+            this.maskedTextBox8.Location = new System.Drawing.Point(68, 507);
             this.maskedTextBox8.Mask = "0";
             this.maskedTextBox8.Name = "maskedTextBox8";
             this.maskedTextBox8.Size = new System.Drawing.Size(36, 20);
@@ -196,7 +178,7 @@
             // 
             // maskedTextBox9
             // 
-            this.maskedTextBox9.Location = new System.Drawing.Point(125, 507);
+            this.maskedTextBox9.Location = new System.Drawing.Point(120, 507);
             this.maskedTextBox9.Mask = "0";
             this.maskedTextBox9.Name = "maskedTextBox9";
             this.maskedTextBox9.Size = new System.Drawing.Size(36, 20);
@@ -210,7 +192,7 @@
             "Без размытия",
             "Равномерный",
             "Взвешенный"});
-            this.filterComboBox.Location = new System.Drawing.Point(186, 443);
+            this.filterComboBox.Location = new System.Drawing.Point(181, 443);
             this.filterComboBox.Name = "filterComboBox";
             this.filterComboBox.Size = new System.Drawing.Size(111, 26);
             this.filterComboBox.TabIndex = 16;
@@ -220,7 +202,7 @@
             // 
             this.label3.AutoSize = true;
             this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.label3.Location = new System.Drawing.Point(104, 415);
+            this.label3.Location = new System.Drawing.Point(99, 415);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(79, 18);
             this.label3.TabIndex = 22;
@@ -230,7 +212,7 @@
             // 
             this.label4.AutoSize = true;
             this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.label4.Location = new System.Drawing.Point(460, 430);
+            this.label4.Location = new System.Drawing.Point(467, 430);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(124, 18);
             this.label4.TabIndex = 23;
@@ -238,7 +220,7 @@
             // 
             // blurButton
             // 
-            this.blurButton.Location = new System.Drawing.Point(185, 476);
+            this.blurButton.Location = new System.Drawing.Point(180, 476);
             this.blurButton.Name = "blurButton";
             this.blurButton.Size = new System.Drawing.Size(109, 23);
             this.blurButton.TabIndex = 24;
@@ -253,7 +235,7 @@
             0,
             0,
             0});
-            this.gradAreaUpDown.Location = new System.Drawing.Point(292, 97);
+            this.gradAreaUpDown.Location = new System.Drawing.Point(301, 97);
             this.gradAreaUpDown.Maximum = new decimal(new int[] {
             27,
             0,
@@ -278,7 +260,7 @@
             // 
             this.label5.AutoSize = true;
             this.label5.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.label5.Location = new System.Drawing.Point(299, 51);
+            this.label5.Location = new System.Drawing.Point(308, 51);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(71, 18);
             this.label5.TabIndex = 26;
@@ -286,7 +268,7 @@
             // 
             // clearButton
             // 
-            this.clearButton.Location = new System.Drawing.Point(290, 231);
+            this.clearButton.Location = new System.Drawing.Point(299, 231);
             this.clearButton.Name = "clearButton";
             this.clearButton.Size = new System.Drawing.Size(91, 23);
             this.clearButton.TabIndex = 27;
@@ -298,7 +280,7 @@
             // 
             this.label6.AutoSize = true;
             this.label6.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.label6.Location = new System.Drawing.Point(295, 71);
+            this.label6.Location = new System.Drawing.Point(304, 71);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(78, 18);
             this.label6.TabIndex = 28;
@@ -308,7 +290,7 @@
             // 
             this.label7.AutoSize = true;
             this.label7.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.label7.Location = new System.Drawing.Point(298, 160);
+            this.label7.Location = new System.Drawing.Point(307, 160);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(81, 18);
             this.label7.TabIndex = 31;
@@ -318,7 +300,7 @@
             // 
             this.label8.AutoSize = true;
             this.label8.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.label8.Location = new System.Drawing.Point(302, 139);
+            this.label8.Location = new System.Drawing.Point(311, 139);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(71, 18);
             this.label8.TabIndex = 30;
@@ -331,7 +313,7 @@
             0,
             0,
             0});
-            this.dencityUpDown.Location = new System.Drawing.Point(295, 185);
+            this.dencityUpDown.Location = new System.Drawing.Point(304, 185);
             this.dencityUpDown.Maximum = new decimal(new int[] {
             34,
             0,
@@ -395,6 +377,24 @@
             this.histButton.UseVisualStyleBackColor = true;
             this.histButton.Click += new System.EventHandler(this.histButton_Click);
             // 
+            // resultImageBox
+            // 
+            this.resultImageBox.Location = new System.Drawing.Point(399, 44);
+            this.resultImageBox.Name = "resultImageBox";
+            this.resultImageBox.Size = new System.Drawing.Size(275, 364);
+            this.resultImageBox.TabIndex = 1;
+            this.resultImageBox.TabStop = false;
+            // 
+            // sourceImageBox
+            // 
+            this.sourceImageBox.ImageLocation = "";
+            this.sourceImageBox.InitialImage = null;
+            this.sourceImageBox.Location = new System.Drawing.Point(16, 40);
+            this.sourceImageBox.Name = "sourceImageBox";
+            this.sourceImageBox.Size = new System.Drawing.Size(275, 364);
+            this.sourceImageBox.TabIndex = 0;
+            this.sourceImageBox.TabStop = false;
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -431,11 +431,11 @@
             this.MaximizeBox = false;
             this.Name = "MainForm";
             this.Text = "Градиент и его направление";
-            ((System.ComponentModel.ISupportInitialize)(this.sourceImageBox)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.resultImageBox)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.gradAreaUpDown)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dencityUpDown)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.histogram)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.resultImageBox)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.sourceImageBox)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 

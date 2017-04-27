@@ -12,7 +12,7 @@ namespace NIR_WindowsForms
 {
     public partial class MainForm : Form
     {
-        private static Bitmap sourceImage = NIR_WindowsForms.Properties.Resources._2; //исходное изображение внедренное в ресурсы программы
+        private static Bitmap sourceImage = NIR_WindowsForms.Properties.Resources._5; //исходное изображение внедренное в ресурсы программы
        
         public MainForm()
         {
