@@ -105,7 +105,8 @@
             "Плотность линий (средняя)",
             "Волосы Вероники",
             "Качество 2",
-            "Размытие Вероники"});
+            "Размытие Вероники",
+            "Габорик"});
             this.menuBox.Location = new System.Drawing.Point(402, 467);
             this.menuBox.Name = "menuBox";
             this.menuBox.Size = new System.Drawing.Size(256, 28);
@@ -250,7 +251,7 @@
             this.gradAreaUpDown.Size = new System.Drawing.Size(86, 20);
             this.gradAreaUpDown.TabIndex = 25;
             this.gradAreaUpDown.Value = new decimal(new int[] {
-            9,
+            15,
             0,
             0,
             0});

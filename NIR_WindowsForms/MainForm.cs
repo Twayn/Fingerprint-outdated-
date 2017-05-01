@@ -152,9 +152,10 @@ namespace NIR_WindowsForms
                     break;
                 }
             }
-
-            resultImageBox.Image = Picture.binary(image, medianBright / 4);
-            MessageBox.Show("Median is: " + medianBright);
+            UtilityFunctions.setInfoArea(Picture.binary(image, medianBright / 4));
+            resultImageBox.Image = UtilityFunctions.imgInfoArea;
+            
+            //MessageBox.Show("Median is: " + medianBright);
         }
     }
 }

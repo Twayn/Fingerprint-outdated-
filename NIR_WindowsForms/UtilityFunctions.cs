@@ -13,6 +13,8 @@ namespace NIR_WindowsForms
 {
     class UtilityFunctions
     {
+        public static Bitmap imgInfoArea;
+
         public static int[] filter;
 
         private static int _height;
@@ -40,6 +42,9 @@ namespace NIR_WindowsForms
         private static double[,] qualityAreaDencity;
 
         private static double[,] verBlur;
+
+        private static double[,] gaboric;
+        private static double[,] infoArea;
 
         public static void setInitialData(Bitmap image)
         {
@@ -80,6 +85,20 @@ namespace NIR_WindowsForms
             qualityAreaDencity = new double[_width, _height];
 
             verBlur = new double[_width, _height];
+
+            gaboric = new double[_width, _height];
+            infoArea = new double[_width, _height];
+
+        }
+
+        public static void setInfoArea (Bitmap image) {
+            imgInfoArea = image;
+
+            for (int i = 0; i < _width; i++) {
+                for (int j = 0; j < _height; j++) {
+                    infoArea[i, j] = image.GetPixel(i, j).GetBrightness() * 255;
+                }
+            }
         }
 
         /*Module and argument of gradient (at point)*/
@@ -238,30 +257,47 @@ namespace NIR_WindowsForms
             return Picture.drawImage(verBlur);
         }
 
+        public static Bitmap aGabor()
+        {
+            return Picture.drawImage1(gaboric);
+        }
+
         public static Bitmap directionField(){
             Bitmap image = new Bitmap(_width, _height);
             Pen blackPen = new Pen(Color.Black, 1);
 
+            ////Best view
+            //int length = 10;
+            //int area = 16;
+
             //Best view
-            int length = 10;
-            int area = 16;
+            int length = 6;
+            int area = 10;
 
             using (var graphics = Graphics.FromImage(image)){
                 for (int x = area; x < _width - area; x += area){
                     for (int y = area; y < _height - area; y += area){
-                        if (areaAngle[x, y] <= 180.0){
-                            graphics.DrawLine(blackPen, 
-                             Convert.ToInt32(x + Trigon.cos(areaAngle[x, y]) * length / 2),
-                             Convert.ToInt32(y + Trigon.sin(areaAngle[x, y]) * length / 2),
-                             Convert.ToInt32(x + Trigon.cos(areaAngle[x, y] + 180) * length / 2),
-                             Convert.ToInt32(y + Trigon.sin(areaAngle[x, y] + 180) * length / 2));
+
+                        double angle = areaAngle[x, y];
+
+                        if (angle < 270) {
+                            angle = angle + 90;
+                        } else angle = angle - 90;
+
+
+                        if (angle <= 180.0){
+                            graphics.DrawLine(blackPen,
+                             Convert.ToInt32(x + Trigon.cos(angle) * length / 2),
+                             Convert.ToInt32(y + Trigon.sin(angle) * length / 2),
+                             Convert.ToInt32(x + Trigon.cos(angle + 180) * length / 2),
+                             Convert.ToInt32(y + Trigon.sin(angle + 180) * length / 2));
                         }
                         else {
                             graphics.DrawLine(blackPen,
-                             Convert.ToInt32(x + Trigon.cos(areaAngle[x, y]) * length / 2),
-                             Convert.ToInt32(y + Trigon.sin(areaAngle[x, y]) * length / 2),
-                             Convert.ToInt32(x + Trigon.cos(areaAngle[x, y]-180) * length / 2),
-                             Convert.ToInt32(y + Trigon.sin(areaAngle[x, y]-180) * length / 2));
+                             Convert.ToInt32(x + Trigon.cos(angle) * length / 2),
+                             Convert.ToInt32(y + Trigon.sin(angle) * length / 2),
+                             Convert.ToInt32(x + Trigon.cos(angle - 180) * length / 2),
+                             Convert.ToInt32(y + Trigon.sin(angle - 180) * length / 2));
                         }
                     }
                 }
@@ -458,6 +494,136 @@ namespace NIR_WindowsForms
             }
             
             return dencity;
+        }
+
+        public static void gabor(int size) {
+            
+            int outer = (size + 1) / 2;
+            int inner = (size - 1) / 2;
+
+            double sigma = 3.0d;
+            double sqrSigma = sigma*sigma;
+            double doubleSqrSigma = 2.0d * sqrSigma; 
+
+
+            for (int x = outer; x < _width - outer; x++){
+                for (int y = outer; y < _height - outer; y++){
+                    double info = infoArea[x, y];
+
+
+                    double angle = areaAngle[x, y];
+                    if (angle < 270) {
+                        angle = angle + 90;
+                    }
+                    else angle = angle - 90;
+
+                    double dencity = averageDensity[x, y];
+
+                    double result = 0.0;
+
+                    //file.WriteLine("Уг: " + angle);
+                    //file.WriteLine("Чст: " + dencity);
+
+                    double coordX = -inner;
+                    
+                    for (int w = x - inner; w < x + inner; w++){
+                  
+                        double coordY = -inner;
+
+                        for (int z = y - inner; z < y + inner; z++){
+                            //file.WriteLine("Координата Y: " + coordY);
+
+                            double x2 = coordX * coordX;
+                            double y2 = coordY * coordY;
+
+                            double gauss = Math.Exp(-((x2 + y2) / doubleSqrSigma));
+
+                            double gabor = Math.Cos((2.0d * Math.PI * dencity)) * (coordX * Trigon.sin(angle) + coordY * Trigon.cos(angle));
+
+                            double brightness = sourceImage[w, z];
+
+                            
+                            result += (gauss * gabor * brightness);
+
+                            coordY++;
+                        }
+                        //file.WriteLine("Координата X: " + coordX);
+                        coordX++;
+                    }
+
+
+                    result = result / (size * size);
+
+                    file.WriteLine("Результат: " + result);
+
+                    if (info == 255){
+                        gaboric[x, y] = result;
+                    }
+                    else {
+                        gaboric[x, y] = 0;
+                    }
+
+                }
+            }
+            file.Close();
+        }
+
+        public static void gaborV2(int lineLength)
+        {
+        
+            for (int x = lineLength / 2; x < _width - lineLength / 2; x++)
+            {
+                for (int y = lineLength / 2; y < _height - lineLength / 2; y++)
+                {
+
+                    double info = infoArea[x, y];
+
+                    if (info == 255)
+                    {
+                        double angle = areaAngle[x, y];
+                        if (angle < 270)
+                        {
+                            angle = angle + 90;
+                        }
+                        else angle = angle - 90;
+
+                        List<Coord> lineCoordinates = new List<Coord>();
+
+                        if (angle <= 180.0)
+                        {
+                            lineCoordinates = Picture.getLine(
+                             Convert.ToInt32(x + Trigon.cos(angle) * lineLength / 2),
+                             Convert.ToInt32(y + Trigon.sin(angle) * lineLength / 2),
+                             Convert.ToInt32(x + Trigon.cos(angle + 180) * lineLength / 2),
+                             Convert.ToInt32(y + Trigon.sin(angle + 180) * lineLength / 2));
+                        }
+                        else
+                        {
+                            lineCoordinates = Picture.getLine(
+                             Convert.ToInt32(x + Trigon.cos(angle) * lineLength / 2),
+                             Convert.ToInt32(y + Trigon.sin(angle) * lineLength / 2),
+                             Convert.ToInt32(x + Trigon.cos(angle - 180) * lineLength / 2),
+                             Convert.ToInt32(y + Trigon.sin(angle - 180) * lineLength / 2));
+                        }
+
+                        double sum = 0.0d;
+
+                        for (int i = 1; i < lineCoordinates.Count - 1; i++)
+                        {
+                            sum += sourceImage[lineCoordinates[i].getX(), lineCoordinates[i].getY()];
+                        }
+
+                        gaboric[x, y] = sum / lineCoordinates.Count;
+                    }
+                    else {
+                        gaboric[x, y] = 0;
+                    }
+
+                    
+                }
+            }
+
+            
         }
     }
 }

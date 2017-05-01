@@ -10,8 +10,8 @@ namespace NIR_WindowsForms
     public class Steps {
         private static Bitmap[] images = new Bitmap[50];
 
-        private static int areaGrad = 9;
-        private static int areaDencity = 22;
+        private static int areaGrad = 15;
+        private static int areaDencity = 24;
 
         public static void setAreaGrad(int area) {
             areaGrad = area;
@@ -48,7 +48,7 @@ namespace NIR_WindowsForms
                     UtilityFunctions.ridgeDensity(areaDencity);
                     return UtilityFunctions.pDencity();
                 case 9:
-                    UtilityFunctions.areaRidgeDencity(3);
+                    UtilityFunctions.areaRidgeDencity(5);
                     return UtilityFunctions.aDencity();
                 case 10:
                     return UtilityFunctions.qualityDenc();
@@ -58,6 +58,10 @@ namespace NIR_WindowsForms
                 case 12:
                     UtilityFunctions.veronicaBlur();
                     return UtilityFunctions.hairVeronicaBlur();
+                case 13:
+                    UtilityFunctions.gaborV2(9);
+                    return UtilityFunctions.aGabor();
+
                 default:
                     return new Bitmap(10, 10);
             }

@@ -27,6 +27,7 @@ namespace NIR_WindowsForms
                     try
                     {
                         int temp = Convert.ToInt32(array[x, y] / ratio);
+                        
                         image.SetPixel(x, y, Color.FromArgb(temp, temp, temp));
                     }
                     catch (System.OverflowException e)
@@ -42,6 +43,66 @@ namespace NIR_WindowsForms
 
             return image;
         }
+
+
+
+
+        public static Bitmap drawImage1(double[,] array)
+        {
+            Bitmap image = new Bitmap(width, height);
+
+
+            double minVal = 10000;
+
+            for (int x = 0; x < image.Width; x++)
+            {
+                for (int y = 0; y < image.Height; y++)
+                {
+                    if (array[x, y] < minVal)
+                    {
+                        minVal = array[x, y];
+                    }
+                }
+            }
+
+           
+
+            for (int x = 0; x < image.Width; x++)
+            {
+                for (int y = 0; y < image.Height; y++)
+                {
+                    array[x, y] += Math.Abs(minVal);
+                }
+            }
+
+
+            double ratio = calcRatio(array);
+
+            for (int x = 0; x < image.Width; x++)
+            {
+                for (int y = 0; y < image.Height; y++)
+                {
+                    try
+                    {
+                        int temp = Convert.ToInt32(array[x, y] / ratio);
+                        image.SetPixel(x, y, Color.FromArgb(temp, temp, temp));
+                    }
+                    catch (System.OverflowException e)
+                    {
+                        Console.WriteLine("X: " + x);
+                        Console.WriteLine("Y: " + y);
+                        Console.WriteLine("array[x,y]: " + array[x, y]);
+                        Console.WriteLine("ratio: " + ratio);
+                    }
+
+                }
+            }
+
+            return image;
+        }
+
+
+
 
         private static double calcRatio(double[,] image) {
             double maxVal = 0;
@@ -63,6 +124,27 @@ namespace NIR_WindowsForms
             //else {
             //    return 1;
             //}
+        }
+
+        private static double[,] normalize(double[,] image)
+        {
+            double minVal = 10000;
+
+            for (int x = 0; x < width; x++){
+                for (int y = 0; y < height; y++){
+                    if (image[x, y] < minVal){
+                        minVal = image[x, y];
+                    }
+                }
+            }
+
+            for (int x = 0; x < width; x++){
+                for (int y = 0; y < height; y++){
+                    image[x, y] += minVal;
+                }
+            }
+
+            return image;
         }
 
         /*Generate test image with black-white concentric circles*/
