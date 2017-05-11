@@ -24,6 +24,7 @@ namespace NIR_WindowsForms
         private static System.IO.StreamWriter file = new System.IO.StreamWriter(path/*, true*/);
 
         private static double[,] sourceImage;
+        private static double[,] constSourceImage;
 
         private static double[,] pointModule;
         private static double[,] pointAngle;
@@ -97,6 +98,20 @@ namespace NIR_WindowsForms
             for (int i = 0; i < _width; i++) {
                 for (int j = 0; j < _height; j++) {
                     infoArea[i, j] = image.GetPixel(i, j).GetBrightness() * 255;
+                }
+            }
+        }
+
+        public static void setConstImage(Bitmap image) {
+            constSourceImage = new double[_width, _height];
+
+            int width = image.Width;
+            int height = image.Height;
+
+            
+            for (int i = 0; i < _width; i++){
+                for (int j = 0; j < _height; j++){
+                    constSourceImage[i, j] = image.GetPixel(i, j).GetBrightness() * 255;
                 }
             }
         }
@@ -259,7 +274,13 @@ namespace NIR_WindowsForms
 
         public static Bitmap aGabor()
         {
-            return Picture.drawImage1(gaboric);
+            return Picture.drawImage(gaboric);
+        }
+
+        public static Bitmap aErrosia() {
+            errosia(2);
+            dilotacia(2);
+            return Picture.drawImage(infoArea);
         }
 
         public static Bitmap directionField(){
@@ -464,7 +485,7 @@ namespace NIR_WindowsForms
                 double center = derivative[i];
                 double right = derivative[i +1];
 
-                if (center > left && center > right && center > 20)
+                if (center > left && center > right && center > 40)
                 {
                     maximas.Add(i);
                     amplitude.Add(center);
@@ -570,7 +591,7 @@ namespace NIR_WindowsForms
 
         public static void gaborV2(int lineLength)
         {
-        
+            //Blur along ridges direction
             for (int x = lineLength / 2; x < _width - lineLength / 2; x++)
             {
                 for (int y = lineLength / 2; y < _height - lineLength / 2; y++)
@@ -608,9 +629,9 @@ namespace NIR_WindowsForms
 
                         double sum = 0.0d;
 
-                        for (int i = 1; i < lineCoordinates.Count - 1; i++)
+                        for (int i = 0; i < lineCoordinates.Count; i++)
                         {
-                            sum += sourceImage[lineCoordinates[i].getX(), lineCoordinates[i].getY()];
+                            sum += constSourceImage[lineCoordinates[i].getX(), lineCoordinates[i].getY()];
                         }
 
                         gaboric[x, y] = sum / lineCoordinates.Count;
@@ -618,12 +639,180 @@ namespace NIR_WindowsForms
                     else {
                         gaboric[x, y] = 0;
                     }
-
-                    
                 }
             }
+        }
 
-            
+        public static void gaborV2Plus(int lineLength)
+        {
+            int start = (lineLength-1)/2;
+
+            //Differentiation across ridges direction
+            for (int x = lineLength / 2; x < _width - lineLength / 2; x++)
+            {
+                for (int y = lineLength / 2; y < _height - lineLength / 2; y++)
+                {
+
+                    double info = infoArea[x, y];
+
+                    if (info == 255)
+                    {
+                        double angle = areaAngle[x, y];
+
+
+                        List<Coord> lineCoordinates = new List<Coord>();
+
+                        if (angle <= 180.0)
+                        {
+                            lineCoordinates = Picture.getLine(
+                             Convert.ToInt32(x + Trigon.cos(angle) * lineLength / 2),
+                             Convert.ToInt32(y + Trigon.sin(angle) * lineLength / 2),
+                             Convert.ToInt32(x + Trigon.cos(angle + 180) * lineLength / 2),
+                             Convert.ToInt32(y + Trigon.sin(angle + 180) * lineLength / 2));
+                        }
+                        else
+                        {
+                            lineCoordinates = Picture.getLine(
+                             Convert.ToInt32(x + Trigon.cos(angle) * lineLength / 2),
+                             Convert.ToInt32(y + Trigon.sin(angle) * lineLength / 2),
+                             Convert.ToInt32(x + Trigon.cos(angle - 180) * lineLength / 2),
+                             Convert.ToInt32(y + Trigon.sin(angle - 180) * lineLength / 2));
+                        }
+
+                        double sum = 0.0d;
+                        
+
+                        double sigma = 2.5d;
+                        //double theta = 0.4d;
+                        double theta = averageDensity[x,y];
+                        double[] coeffs = new double[lineLength];
+
+                        for (int i = -start; i < start + 1; i++)
+                        {
+                            double left = Math.Exp(-((i * i) / (2.0d * sigma * sigma)));
+                            double right = Math.Cos(2.0d * Math.PI * i * theta);
+                            coeffs[i + start] = left * right;
+                            sum = sum + coeffs[i + start];
+                          
+                        }
+
+                        double average = sum / ((start * 2) + 1);
+
+                        double bigSum = 0.0d;
+
+                        for (int i = 0; i < lineCoordinates.Count; i++){
+                            bigSum += constSourceImage[lineCoordinates[i].getX(), lineCoordinates[i].getY()] * (coeffs[i]-average);
+                        }
+
+                        file.WriteLine(bigSum);
+
+                        if (bigSum > 0) {
+                            bigSum = 0;
+                        } else {
+                            bigSum = 255;
+                        }
+
+                        gaboric[x, y] = bigSum;
+                    }
+                    else
+                    {
+                        gaboric[x, y] = 0;
+                    }
+                }
+            }
+        }
+
+        private static void errosia(int steps)
+        {
+            for (int i = 0; i < 13; i++) {
+                double z1, z2, z3, z4, z5, z6, z7, z8, z9;
+
+                List<Coord> coordinates = new List<Coord>();
+
+                for (int x = 1; x < _width - 1; x++)
+                {
+                    for (int y = 1; y < _height - 1; y++)
+                    {
+                        z1 = infoArea[x - 1, y - 1];
+                        z2 = infoArea[x - 1, y];
+                        z3 = infoArea[x - 1, y + 1];
+                        z4 = infoArea[x, y - 1];
+                        z5 = infoArea[x, y];
+                        z6 = infoArea[x, y + 1];
+                        z7 = infoArea[x + 1, y - 1];
+                        z8 = infoArea[x + 1, y];
+                        z9 = infoArea[x + 1, y + 1];
+
+                        double sum = 0.0;
+                        sum = z1 + z2 + z3 + z4 + z5 + z6 + z7 + z8 + z9;
+                        file.WriteLine(sum);
+                        if (sum == 255) coordinates.Add(new Coord(x, y));
+                    }
+                }
+
+                foreach (Coord c in coordinates)
+                {
+                    int x = c.getX();
+                    int y = c.getY();
+
+                    infoArea[x - 1, y - 1] = 0;
+                    infoArea[x - 1, y] = 0;
+                    infoArea[x - 1, y + 1] = 0;
+                    infoArea[x, y - 1] = 0;
+                    infoArea[x, y] = 0;
+                    infoArea[x, y + 1] = 0;
+                    infoArea[x + 1, y - 1] = 0;
+                    infoArea[x + 1, y] = 0;
+                    infoArea[x + 1, y + 1] = 0;
+                }
+            }
+        }
+
+        private static void dilotacia(int steps)
+        {
+            for (int i = 0; i < 8; i++)
+            {
+                double z1, z2, z3, z4, z5, z6, z7, z8, z9;
+
+                List<Coord> coordinates = new List<Coord>();
+
+                for (int x = 1; x < _width - 1; x++)
+                {
+                    for (int y = 1; y < _height - 1; y++)
+                    {
+                        z1 = infoArea[x - 1, y - 1];
+                        z2 = infoArea[x - 1, y];
+                        z3 = infoArea[x - 1, y + 1];
+                        z4 = infoArea[x, y - 1];
+                        z5 = infoArea[x, y];
+                        z6 = infoArea[x, y + 1];
+                        z7 = infoArea[x + 1, y - 1];
+                        z8 = infoArea[x + 1, y];
+                        z9 = infoArea[x + 1, y + 1];
+
+                        double sum = 0.0;
+                        sum = z1 + z2 + z3 + z4 + z5 + z6 + z7 + z8 + z9;
+                        file.WriteLine(sum);
+                        if (sum == 2040) coordinates.Add(new Coord(x, y));
+                    }
+                }
+
+                foreach (Coord c in coordinates)
+                {
+                    int x = c.getX();
+                    int y = c.getY();
+
+                    infoArea[x - 1, y - 1] = 255;
+                    infoArea[x - 1, y] = 255;
+                    infoArea[x - 1, y + 1] = 255;
+                    infoArea[x, y - 1] = 255;
+                    infoArea[x, y] = 255;
+                    infoArea[x, y + 1] = 255;
+                    infoArea[x + 1, y - 1] = 255;
+                    infoArea[x + 1, y] = 255;
+                    infoArea[x + 1, y + 1] = 255;
+                }
+            }
         }
     }
 }

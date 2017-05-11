@@ -106,7 +106,9 @@
             "Волосы Вероники",
             "Качество 2",
             "Размытие Вероники",
-            "Габорик"});
+            "Эррозия + Дилотация",
+            "Габор(сглаживание)",
+            "Габор(дифф.)"});
             this.menuBox.Location = new System.Drawing.Point(402, 467);
             this.menuBox.Name = "menuBox";
             this.menuBox.Size = new System.Drawing.Size(256, 28);
@@ -431,7 +433,7 @@
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.Name = "MainForm";
-            this.Text = "Градиент и его направление";
+            this.Text = "Демонстрация этапов";
             ((System.ComponentModel.ISupportInitialize)(this.gradAreaUpDown)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dencityUpDown)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.histogram)).EndInit();

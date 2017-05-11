@@ -199,10 +199,12 @@ namespace NIR_WindowsForms
 
         public static int[] hist(Bitmap image_arg) {
             Bitmap image = new Bitmap(image_arg);
-            int[] hist = new int[image.Width];
+            int[] hist = new int[256];
 
-            for (int x = 11; x < image.Width - 11; x++) {
-                for (int y = 11; y < image.Height - 11; y++) {
+            int border = 15;
+
+            for (int x = border; x < image.Width - border; x++) {
+                for (int y = border; y < image.Height - border; y++) {
                     int i = Convert.ToInt32(image.GetPixel(x, y).GetBrightness() * 255);
                     hist[i]++;
                 }

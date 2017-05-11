@@ -23,43 +23,48 @@ namespace NIR_WindowsForms
 
         private static Bitmap choose(int num) {
             switch (num) {
-                case 0:
+                case 0://Gradient module at point
                     UtilityFunctions.pointGrad();
                     return UtilityFunctions.pModule();
-                case 1:
+                case 1://Gradient direction at point
                     return UtilityFunctions.pDirection();
-                case 2:
+                case 2://Gradient module at area
                     UtilityFunctions.areaGrad(areaGrad);
                     return UtilityFunctions.aModule();
-                case 3:
+                case 3://Gradient direction at point
                     return UtilityFunctions.aDirection();
-                case 4:
+                case 4://Direction at field
                     return UtilityFunctions.directionField();
-                case 5:
+                case 5://Coherence
                     return UtilityFunctions.aCoh();
                 case 6:
-                    //UtilityFunctions.minMaxCoh();
-                    //return UtilityFunctions.aCohMin();
+                    UtilityFunctions.minMaxCoh();
+                    return UtilityFunctions.aCohMin();
                     return new Bitmap(10, 10);
                 case 7:
-                    //return UtilityFunctions.aCohMax();
+                    return UtilityFunctions.aCohMax();
                     return new Bitmap(10, 10);
-                case 8:
+                case 8://Ridge dencity at point
                     UtilityFunctions.ridgeDensity(areaDencity);
                     return UtilityFunctions.pDencity();
-                case 9:
+                case 9://RidgeDencity at area (average dencity)
                     UtilityFunctions.areaRidgeDencity(5);
                     return UtilityFunctions.aDencity();
-                case 10:
+                case 10://Veronica's hair
                     return UtilityFunctions.qualityDenc();
                 case 11:
-                    UtilityFunctions.areaQualityDenc(5);
+                    UtilityFunctions.areaQualityDenc(3);
                     return UtilityFunctions.aQualityDenc();
                 case 12:
                     UtilityFunctions.veronicaBlur();
                     return UtilityFunctions.hairVeronicaBlur();
                 case 13:
-                    UtilityFunctions.gaborV2(9);
+                    return UtilityFunctions.aErrosia();
+                case 14:
+                    UtilityFunctions.gaborV2(7);
+                    return UtilityFunctions.aGabor();
+                case 15:
+                    UtilityFunctions.gaborV2Plus(15);
                     return UtilityFunctions.aGabor();
 
                 default:

@@ -21,6 +21,7 @@ namespace NIR_WindowsForms
             //init(sourceImage, gauss);
             init();
             UtilityFunctions.filter = equal;
+            UtilityFunctions.setConstImage(sourceImage);
         }
 
         private void menuBox_SelectedIndexChanged(object sender, EventArgs e)
