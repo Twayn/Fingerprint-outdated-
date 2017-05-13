@@ -44,7 +44,8 @@ namespace NIR_WindowsForms
 
         private static double[,] verBlur;
 
-        private static double[,] gaboric;
+        private static double[,] gaborBlur;
+        private static double[,] gaborDiff;
         private static double[,] infoArea;
 
         public static void setInitialData(Bitmap image)
@@ -87,7 +88,8 @@ namespace NIR_WindowsForms
 
             verBlur = new double[_width, _height];
 
-            gaboric = new double[_width, _height];
+            gaborBlur = new double[_width, _height];
+            gaborDiff = new double[_width, _height];
             infoArea = new double[_width, _height];
 
         }
@@ -272,9 +274,14 @@ namespace NIR_WindowsForms
             return Picture.drawImage(verBlur);
         }
 
-        public static Bitmap aGabor()
+        public static Bitmap aGaborBlur()
         {
-            return Picture.drawImage(gaboric);
+            return Picture.drawImage(gaborBlur);
+        }
+
+        public static Bitmap aGaborDiff()
+        {
+            return Picture.drawImage(gaborDiff);
         }
 
         public static Bitmap aErrosia() {
@@ -475,10 +482,6 @@ namespace NIR_WindowsForms
                 derivative.Add(right-left);
             }
 
-            //foreach (var v in derivative) {
-            //    file.WriteLine("deriviative: " + v);
-            //}
-
             for (int i = 1; i < derivative.Count - 1; i++)
             {
                 double left = derivative[i - 1];
@@ -492,11 +495,6 @@ namespace NIR_WindowsForms
                 }
             }
 
-            //foreach (var v in maximas)
-            //{
-            //    file.WriteLine("max: " + v);
-            //}
-
             int delimeter = maximas.Count - 1;
             int divider = 0;
 
@@ -508,86 +506,75 @@ namespace NIR_WindowsForms
            
             if (divider == 0) { dencity = 1; }
 
-            //file.WriteLine("DENC: " + dencity);
             if (amplitude.Count != 0) {
-                //file.WriteLine("AMPL MIN: " + amplitude.Min());
                 qualityDencity[x,y] = amplitude.Min();
             }
             
             return dencity;
         }
 
-        public static void gabor(int size) {
+        //public static void gabor(int size) {
             
-            int outer = (size + 1) / 2;
-            int inner = (size - 1) / 2;
+        //    int outer = (size + 1) / 2;
+        //    int inner = (size - 1) / 2;
 
-            double sigma = 3.0d;
-            double sqrSigma = sigma*sigma;
-            double doubleSqrSigma = 2.0d * sqrSigma; 
-
-
-            for (int x = outer; x < _width - outer; x++){
-                for (int y = outer; y < _height - outer; y++){
-                    double info = infoArea[x, y];
+        //    double sigma = 3.0d;
+        //    double sqrSigma = sigma*sigma;
+        //    double doubleSqrSigma = 2.0d * sqrSigma; 
 
 
-                    double angle = areaAngle[x, y];
-                    if (angle < 270) {
-                        angle = angle + 90;
-                    }
-                    else angle = angle - 90;
+        //    for (int x = outer; x < _width - outer; x++){
+        //        for (int y = outer; y < _height - outer; y++){
+        //            double info = infoArea[x, y];
 
-                    double dencity = averageDensity[x, y];
 
-                    double result = 0.0;
+        //            double angle = areaAngle[x, y];
+        //            if (angle < 270) {
+        //                angle = angle + 90;
+        //            }
+        //            else angle = angle - 90;
 
-                    //file.WriteLine("Уг: " + angle);
-                    //file.WriteLine("Чст: " + dencity);
+        //            double dencity = averageDensity[x, y];
 
-                    double coordX = -inner;
+        //            double result = 0.0;
+
+        //            double coordX = -inner;
                     
-                    for (int w = x - inner; w < x + inner; w++){
+        //            for (int w = x - inner; w < x + inner; w++){
                   
-                        double coordY = -inner;
+        //                double coordY = -inner;
 
-                        for (int z = y - inner; z < y + inner; z++){
-                            //file.WriteLine("Координата Y: " + coordY);
+        //                for (int z = y - inner; z < y + inner; z++){
+        //                    double x2 = coordX * coordX;
+        //                    double y2 = coordY * coordY;
 
-                            double x2 = coordX * coordX;
-                            double y2 = coordY * coordY;
+        //                    double gauss = Math.Exp(-((x2 + y2) / doubleSqrSigma));
 
-                            double gauss = Math.Exp(-((x2 + y2) / doubleSqrSigma));
+        //                    double gabor = Math.Cos((2.0d * Math.PI * dencity)) * (coordX * Trigon.sin(angle) + coordY * Trigon.cos(angle));
 
-                            double gabor = Math.Cos((2.0d * Math.PI * dencity)) * (coordX * Trigon.sin(angle) + coordY * Trigon.cos(angle));
-
-                            double brightness = sourceImage[w, z];
+        //                    double brightness = sourceImage[w, z];
 
                             
-                            result += (gauss * gabor * brightness);
+        //                    result += (gauss * gabor * brightness);
 
-                            coordY++;
-                        }
-                        //file.WriteLine("Координата X: " + coordX);
-                        coordX++;
-                    }
+        //                    coordY++;
+        //                }
+        //                coordX++;
+        //            }
 
 
-                    result = result / (size * size);
+        //            result = result / (size * size);
 
-                    file.WriteLine("Результат: " + result);
+        //            if (info == 255){
+        //                gaborBlur[x, y] = result;
+        //            }
+        //            else {
+        //                gaborBlur[x, y] = 0;
+        //            }
 
-                    if (info == 255){
-                        gaboric[x, y] = result;
-                    }
-                    else {
-                        gaboric[x, y] = 0;
-                    }
-
-                }
-            }
-            file.Close();
-        }
+        //        }
+        //    }
+        //}
 
         public static void gaborV2(int lineLength)
         {
@@ -634,31 +621,25 @@ namespace NIR_WindowsForms
                             sum += constSourceImage[lineCoordinates[i].getX(), lineCoordinates[i].getY()];
                         }
 
-                        gaboric[x, y] = sum / lineCoordinates.Count;
+                        gaborBlur[x, y] = sum / lineCoordinates.Count;
                     }
                     else {
-                        gaboric[x, y] = 0;
+                        gaborBlur[x, y] = 210;
                     }
                 }
             }
         }
 
-        public static void gaborV2Plus(int lineLength)
-        {
+        public static void gaborV2Plus(int lineLength) {
             int start = (lineLength-1)/2;
 
             //Differentiation across ridges direction
-            for (int x = lineLength / 2; x < _width - lineLength / 2; x++)
-            {
-                for (int y = lineLength / 2; y < _height - lineLength / 2; y++)
-                {
-
+            for (int x = lineLength / 2; x < _width - lineLength / 2; x++) {
+                for (int y = lineLength / 2; y < _height - lineLength / 2; y++) {
                     double info = infoArea[x, y];
 
-                    if (info == 255)
-                    {
+                    if (info == 255) {
                         double angle = areaAngle[x, y];
-
 
                         List<Coord> lineCoordinates = new List<Coord>();
 
@@ -680,7 +661,6 @@ namespace NIR_WindowsForms
                         }
 
                         double sum = 0.0d;
-                        
 
                         double sigma = 2.5d;
                         //double theta = 0.4d;
@@ -693,33 +673,32 @@ namespace NIR_WindowsForms
                             double right = Math.Cos(2.0d * Math.PI * i * theta);
                             coeffs[i + start] = left * right;
                             sum = sum + coeffs[i + start];
-                          
                         }
 
                         double average = sum / ((start * 2) + 1);
 
+
                         double bigSum = 0.0d;
 
                         for (int i = 0; i < lineCoordinates.Count; i++){
-                            bigSum += constSourceImage[lineCoordinates[i].getX(), lineCoordinates[i].getY()] * (coeffs[i]-average);
+                            bigSum += gaborBlur[lineCoordinates[i].getX(), lineCoordinates[i].getY()] * (coeffs[i] - average);
                         }
-
-                        file.WriteLine(bigSum);
 
                         if (bigSum > 0) {
-                            bigSum = 0;
-                        } else {
                             bigSum = 255;
+                        } else {
+                            bigSum = 0;
                         }
 
-                        gaboric[x, y] = bigSum;
+                        gaborDiff[x, y] = bigSum;
                     }
                     else
                     {
-                        gaboric[x, y] = 0;
+                        gaborDiff[x, y] = 255;
                     }
                 }
             }
+            //gaborDiff[211, 16] = 1000;
         }
 
         private static void errosia(int steps)
@@ -745,7 +724,6 @@ namespace NIR_WindowsForms
 
                         double sum = 0.0;
                         sum = z1 + z2 + z3 + z4 + z5 + z6 + z7 + z8 + z9;
-                        file.WriteLine(sum);
                         if (sum == 255) coordinates.Add(new Coord(x, y));
                     }
                 }
@@ -792,7 +770,6 @@ namespace NIR_WindowsForms
 
                         double sum = 0.0;
                         sum = z1 + z2 + z3 + z4 + z5 + z6 + z7 + z8 + z9;
-                        file.WriteLine(sum);
                         if (sum == 2040) coordinates.Add(new Coord(x, y));
                     }
                 }

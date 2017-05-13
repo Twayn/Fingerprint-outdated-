@@ -38,11 +38,11 @@ namespace NIR_WindowsForms
                 case 5://Coherence
                     return UtilityFunctions.aCoh();
                 case 6:
-                    UtilityFunctions.minMaxCoh();
-                    return UtilityFunctions.aCohMin();
+                    //UtilityFunctions.minMaxCoh();
+                    //return UtilityFunctions.aCohMin();
                     return new Bitmap(10, 10);
                 case 7:
-                    return UtilityFunctions.aCohMax();
+                    //return UtilityFunctions.aCohMax();
                     return new Bitmap(10, 10);
                 case 8://Ridge dencity at point
                     UtilityFunctions.ridgeDensity(areaDencity);
@@ -62,10 +62,10 @@ namespace NIR_WindowsForms
                     return UtilityFunctions.aErrosia();
                 case 14:
                     UtilityFunctions.gaborV2(7);
-                    return UtilityFunctions.aGabor();
+                    return UtilityFunctions.aGaborBlur();
                 case 15:
-                    UtilityFunctions.gaborV2Plus(15);
-                    return UtilityFunctions.aGabor();
+                    UtilityFunctions.gaborV2Plus(5);
+                    return UtilityFunctions.aGaborDiff();
 
                 default:
                     return new Bitmap(10, 10);
