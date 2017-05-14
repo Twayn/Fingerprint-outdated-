@@ -158,5 +158,10 @@ namespace NIR_WindowsForms
             
             //MessageBox.Show("Median is: " + medianBright);
         }
+
+        private void skeletonButton_Click(object sender, EventArgs e)
+        {
+            resultImageBox.Image = Skeleton.skeleton((Bitmap)resultImageBox.Image);
+        }
     }
 }

@@ -61,6 +61,7 @@
             this.histButton = new System.Windows.Forms.Button();
             this.resultImageBox = new System.Windows.Forms.PictureBox();
             this.sourceImageBox = new System.Windows.Forms.PictureBox();
+            this.skeletonButton = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.gradAreaUpDown)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dencityUpDown)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.histogram)).BeginInit();
@@ -372,7 +373,7 @@
             // 
             // histButton
             // 
-            this.histButton.Location = new System.Drawing.Point(831, 467);
+            this.histButton.Location = new System.Drawing.Point(831, 442);
             this.histButton.Name = "histButton";
             this.histButton.Size = new System.Drawing.Size(144, 23);
             this.histButton.TabIndex = 33;
@@ -398,11 +399,22 @@
             this.sourceImageBox.TabIndex = 0;
             this.sourceImageBox.TabStop = false;
             // 
+            // skeletonButton
+            // 
+            this.skeletonButton.Location = new System.Drawing.Point(831, 492);
+            this.skeletonButton.Name = "skeletonButton";
+            this.skeletonButton.Size = new System.Drawing.Size(144, 23);
+            this.skeletonButton.TabIndex = 34;
+            this.skeletonButton.Text = "Построить скелет";
+            this.skeletonButton.UseVisualStyleBackColor = true;
+            this.skeletonButton.Click += new System.EventHandler(this.skeletonButton_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1108, 539);
+            this.Controls.Add(this.skeletonButton);
             this.Controls.Add(this.histButton);
             this.Controls.Add(this.histogram);
             this.Controls.Add(this.label7);
@@ -473,6 +485,7 @@
         private System.Windows.Forms.NumericUpDown dencityUpDown;
         private System.Windows.Forms.DataVisualization.Charting.Chart histogram;
         private System.Windows.Forms.Button histButton;
+        private System.Windows.Forms.Button skeletonButton;
     }
 }
 

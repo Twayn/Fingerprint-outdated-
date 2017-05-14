@@ -64,7 +64,7 @@ namespace NIR_WindowsForms
                     UtilityFunctions.gaborV2(7);
                     return UtilityFunctions.aGaborBlur();
                 case 15:
-                    UtilityFunctions.gaborV2Plus(5);
+                    UtilityFunctions.gaborV2Plus(13);
                     return UtilityFunctions.aGaborDiff();
 
                 default:

@@ -488,7 +488,7 @@ namespace NIR_WindowsForms
                 double center = derivative[i];
                 double right = derivative[i +1];
 
-                if (center > left && center > right && center > 40)
+                if (center > left && center > right && center > 60)
                 {
                     maximas.Add(i);
                     amplitude.Add(center);
@@ -506,7 +506,7 @@ namespace NIR_WindowsForms
            
             if (divider == 0) { dencity = 1; }
 
-            if (amplitude.Count != 0) {
+            if (amplitude.Count > 1) {
                 qualityDencity[x,y] = amplitude.Min();
             }
             
@@ -677,12 +677,34 @@ namespace NIR_WindowsForms
 
                         double average = sum / ((start * 2) + 1);
 
-
                         double bigSum = 0.0d;
 
                         for (int i = 0; i < lineCoordinates.Count; i++){
                             bigSum += gaborBlur[lineCoordinates[i].getX(), lineCoordinates[i].getY()] * (coeffs[i] - average);
                         }
+
+                        /*------------------------------------------------*/
+                        file.WriteLine("Начало итерации");
+                        file.WriteLine("Координаты: " + x + ", " + y);
+                        file.WriteLine("ПЛОТНОСТЬ: " + theta);
+
+                        for (int i = 0; i < lineLength; i++){
+                            file.WriteLine("КОЭФФ. ИСХ. " + i + ": " + coeffs[i]);
+                        }
+
+                        file.WriteLine("СРЕДНЕЕ: " + average);
+
+                        for (int i = 0; i < lineLength; i++) {
+                            file.WriteLine("КОЭФФ. ОБР. " + i + ": " + (coeffs[i]-average));
+                        }
+
+                        for (int i = 0; i < lineCoordinates.Count; i++) {
+                            file.WriteLine("ЯРКОСТЬ " + i + ": " + gaborBlur[lineCoordinates[i].getX(), lineCoordinates[i].getY()]);
+                        }
+
+                        file.WriteLine("РЕЗУЛЬТАТ: " + bigSum);
+                        file.WriteLine("Конец итерации");
+                        /*------------------------------------------------*/
 
                         if (bigSum > 0) {
                             bigSum = 255;
@@ -698,7 +720,8 @@ namespace NIR_WindowsForms
                     }
                 }
             }
-            //gaborDiff[211, 16] = 1000;
+            //gaborDiff[53, 198] = 1000;
+            //gaborDiff[54, 198] = 1000;
         }
 
         private static void errosia(int steps)
