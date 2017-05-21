@@ -47,6 +47,7 @@ namespace NIR_WindowsForms
         private static double[,] gaborBlur;
         private static double[,] gaborDiff;
         private static double[,] infoArea;
+        private static double[,] complex;
 
         public static void setInitialData(Bitmap image)
         {
@@ -91,6 +92,7 @@ namespace NIR_WindowsForms
             gaborBlur = new double[_width, _height];
             gaborDiff = new double[_width, _height];
             infoArea = new double[_width, _height];
+            complex = new double[_width, _height];
 
         }
 
@@ -284,6 +286,11 @@ namespace NIR_WindowsForms
             return Picture.drawImage(gaborDiff);
         }
 
+        public static Bitmap complexQuality()
+        {
+            return Picture.drawImage(complex);
+        }
+
         public static Bitmap aErrosia() {
             errosia(2);
             dilotacia(2);
@@ -298,7 +305,6 @@ namespace NIR_WindowsForms
             //int length = 10;
             //int area = 16;
 
-            //Best view
             int length = 6;
             int area = 10;
 
@@ -397,26 +403,51 @@ namespace NIR_WindowsForms
             }
         }
 
+        private static List<Coord> getLineCoordinates(int x, int y, double angle, int lineLength) {
+            List<Coord> lineCoordinates;
+
+            bool stopFlag = true;
+            int length = lineLength;
+
+            do{
+                lineCoordinates = getSimpleLineCoordinates(x, y, angle, length);
+                if (lineCoordinates.Count >= lineLength) { stopFlag = false; }
+                length++;
+            } while(stopFlag);
+          
+            return lineCoordinates;
+        }
+
+        private static List<Coord> getSimpleLineCoordinates(int x, int y, double angle, int lineLength) {
+            List<Coord> lineCoordinates;
+
+            if (angle <= 180.0) {
+                lineCoordinates = Picture.getLine(
+                 Convert.ToInt32(x + Trigon.cos(angle) * lineLength / 2),
+                 Convert.ToInt32(y + Trigon.sin(angle) * lineLength / 2),
+                 Convert.ToInt32(x + Trigon.cos(angle + 180) * lineLength / 2),
+                 Convert.ToInt32(y + Trigon.sin(angle + 180) * lineLength / 2));
+            }
+            else {
+                lineCoordinates = Picture.getLine(
+                 Convert.ToInt32(x + Trigon.cos(angle) * lineLength / 2),
+                 Convert.ToInt32(y + Trigon.sin(angle) * lineLength / 2),
+                 Convert.ToInt32(x + Trigon.cos(angle - 180) * lineLength / 2),
+                 Convert.ToInt32(y + Trigon.sin(angle - 180) * lineLength / 2));
+            }
+            return lineCoordinates;
+        }
+
+
         public static void ridgeDensity(int lineLength) {
             for (int x = lineLength / 2; x < _width - lineLength / 2; x++) {
                 for (int y = lineLength / 2; y < _height - lineLength / 2; y++) {
                     double angle = areaAngle[x, y];
                     List<Coord> lineCoordinates = new List<Coord>();
 
-                    if (angle <= 180.0) {
-                        lineCoordinates = Picture.getLine(
-                         Convert.ToInt32(x + Trigon.cos(angle) * lineLength / 2),
-                         Convert.ToInt32(y + Trigon.sin(angle) * lineLength / 2),
-                         Convert.ToInt32(x + Trigon.cos(angle + 180) * lineLength / 2),
-                         Convert.ToInt32(y + Trigon.sin(angle + 180) * lineLength / 2));
-                    }
-                    else {
-                        lineCoordinates = Picture.getLine(
-                         Convert.ToInt32(x + Trigon.cos(angle) * lineLength / 2),
-                         Convert.ToInt32(y + Trigon.sin(angle) * lineLength / 2),
-                         Convert.ToInt32(x + Trigon.cos(angle - 180) * lineLength / 2),
-                         Convert.ToInt32(y + Trigon.sin(angle - 180) * lineLength / 2));
-                    }
+                    lineCoordinates = getLineCoordinates(x, y, angle, lineLength);
+
+                    file.WriteLine(lineCoordinates.Count);
                    
                     density[x, y] = calcDencity(lineCoordinates, x, y);
                     //file.WriteLine("X: " + x + "; Y: " + y + "; DENS: " + density[x, y]);
@@ -464,7 +495,18 @@ namespace NIR_WindowsForms
                             }
                         }
                     }
+
                     qualityAreaDencity[x, y] = maxQuality;
+
+                    //if (maxQuality > 100.0d)
+                    //{
+                    //    qualityAreaDencity[x, y] = maxQuality;
+                    //}
+                    //else {
+                    //    qualityAreaDencity[x, y] = 0;
+                    //}
+                    
+                    //System.Diagnostics.Debug.WriteLine("Q " + maxQuality);
                 }
             }
         }
@@ -504,77 +546,14 @@ namespace NIR_WindowsForms
 
             double dencity = (double)delimeter / divider; //Frequency
            
-            if (divider == 0) { dencity = 1; }
+            if (divider == 0) { dencity = 0; }
 
             if (amplitude.Count > 1) {
                 qualityDencity[x,y] = amplitude.Min();
-            }
+            } 
             
             return dencity;
         }
-
-        //public static void gabor(int size) {
-            
-        //    int outer = (size + 1) / 2;
-        //    int inner = (size - 1) / 2;
-
-        //    double sigma = 3.0d;
-        //    double sqrSigma = sigma*sigma;
-        //    double doubleSqrSigma = 2.0d * sqrSigma; 
-
-
-        //    for (int x = outer; x < _width - outer; x++){
-        //        for (int y = outer; y < _height - outer; y++){
-        //            double info = infoArea[x, y];
-
-
-        //            double angle = areaAngle[x, y];
-        //            if (angle < 270) {
-        //                angle = angle + 90;
-        //            }
-        //            else angle = angle - 90;
-
-        //            double dencity = averageDensity[x, y];
-
-        //            double result = 0.0;
-
-        //            double coordX = -inner;
-                    
-        //            for (int w = x - inner; w < x + inner; w++){
-                  
-        //                double coordY = -inner;
-
-        //                for (int z = y - inner; z < y + inner; z++){
-        //                    double x2 = coordX * coordX;
-        //                    double y2 = coordY * coordY;
-
-        //                    double gauss = Math.Exp(-((x2 + y2) / doubleSqrSigma));
-
-        //                    double gabor = Math.Cos((2.0d * Math.PI * dencity)) * (coordX * Trigon.sin(angle) + coordY * Trigon.cos(angle));
-
-        //                    double brightness = sourceImage[w, z];
-
-                            
-        //                    result += (gauss * gabor * brightness);
-
-        //                    coordY++;
-        //                }
-        //                coordX++;
-        //            }
-
-
-        //            result = result / (size * size);
-
-        //            if (info == 255){
-        //                gaborBlur[x, y] = result;
-        //            }
-        //            else {
-        //                gaborBlur[x, y] = 0;
-        //            }
-
-        //        }
-        //    }
-        //}
 
         public static void gaborV2(int lineLength)
         {
@@ -597,22 +576,7 @@ namespace NIR_WindowsForms
 
                         List<Coord> lineCoordinates = new List<Coord>();
 
-                        if (angle <= 180.0)
-                        {
-                            lineCoordinates = Picture.getLine(
-                             Convert.ToInt32(x + Trigon.cos(angle) * lineLength / 2),
-                             Convert.ToInt32(y + Trigon.sin(angle) * lineLength / 2),
-                             Convert.ToInt32(x + Trigon.cos(angle + 180) * lineLength / 2),
-                             Convert.ToInt32(y + Trigon.sin(angle + 180) * lineLength / 2));
-                        }
-                        else
-                        {
-                            lineCoordinates = Picture.getLine(
-                             Convert.ToInt32(x + Trigon.cos(angle) * lineLength / 2),
-                             Convert.ToInt32(y + Trigon.sin(angle) * lineLength / 2),
-                             Convert.ToInt32(x + Trigon.cos(angle - 180) * lineLength / 2),
-                             Convert.ToInt32(y + Trigon.sin(angle - 180) * lineLength / 2));
-                        }
+                        lineCoordinates = getLineCoordinates(x, y, angle, lineLength);
 
                         double sum = 0.0d;
 
@@ -640,31 +604,11 @@ namespace NIR_WindowsForms
 
                     if (info == 255) {
                         double angle = areaAngle[x, y];
-
-                        List<Coord> lineCoordinates = new List<Coord>();
-
-                        if (angle <= 180.0)
-                        {
-                            lineCoordinates = Picture.getLine(
-                             Convert.ToInt32(x + Trigon.cos(angle) * lineLength / 2),
-                             Convert.ToInt32(y + Trigon.sin(angle) * lineLength / 2),
-                             Convert.ToInt32(x + Trigon.cos(angle + 180) * lineLength / 2),
-                             Convert.ToInt32(y + Trigon.sin(angle + 180) * lineLength / 2));
-                        }
-                        else
-                        {
-                            lineCoordinates = Picture.getLine(
-                             Convert.ToInt32(x + Trigon.cos(angle) * lineLength / 2),
-                             Convert.ToInt32(y + Trigon.sin(angle) * lineLength / 2),
-                             Convert.ToInt32(x + Trigon.cos(angle - 180) * lineLength / 2),
-                             Convert.ToInt32(y + Trigon.sin(angle - 180) * lineLength / 2));
-                        }
-
+                        
                         double sum = 0.0d;
-
                         double sigma = 2.5d;
                         //double theta = 0.4d;
-                        double theta = averageDensity[x,y];
+                        double theta = averageDensity[x, y];
                         double[] coeffs = new double[lineLength];
 
                         for (int i = -start; i < start + 1; i++)
@@ -679,8 +623,23 @@ namespace NIR_WindowsForms
 
                         double bigSum = 0.0d;
 
+
+                        List<Coord> lineCoordinates = new List<Coord>();
+                        lineCoordinates = getLineCoordinates(x, y, angle, lineLength);
+                    
+                        double threshold = 0.0d;
+
                         for (int i = 0; i < lineCoordinates.Count; i++){
+                            threshold += gaborBlur[lineCoordinates[i].getX(), lineCoordinates[i].getY()];
                             bigSum += gaborBlur[lineCoordinates[i].getX(), lineCoordinates[i].getY()] * (coeffs[i] - average);
+                        }
+
+                        //if (threshold > lineLength * 190) bigSum = 1;
+
+                        if (bigSum > 0) {
+                            bigSum = 255;
+                        } else {
+                            bigSum = 0;
                         }
 
                         /*------------------------------------------------*/
@@ -698,19 +657,17 @@ namespace NIR_WindowsForms
                             file.WriteLine("КОЭФФ. ОБР. " + i + ": " + (coeffs[i]-average));
                         }
 
-                        for (int i = 0; i < lineCoordinates.Count; i++) {
+                        //System.Diagnostics.Debug.WriteLine(lineLength);
+                        //System.Diagnostics.Debug.WriteLine(lineCoordinates.Count);
+
+                        for (int i = 0; i < lineCoordinates.Count; i++)
+                        {
                             file.WriteLine("ЯРКОСТЬ " + i + ": " + gaborBlur[lineCoordinates[i].getX(), lineCoordinates[i].getY()]);
                         }
 
                         file.WriteLine("РЕЗУЛЬТАТ: " + bigSum);
                         file.WriteLine("Конец итерации");
                         /*------------------------------------------------*/
-
-                        if (bigSum > 0) {
-                            bigSum = 255;
-                        } else {
-                            bigSum = 0;
-                        }
 
                         gaborDiff[x, y] = bigSum;
                     }
@@ -722,6 +679,20 @@ namespace NIR_WindowsForms
             }
             //gaborDiff[53, 198] = 1000;
             //gaborDiff[54, 198] = 1000;
+        }
+
+        public static void complexQ() {
+            for (int x = 1; x < _width - 1; x++)
+            {
+                for (int y = 1; y < _height - 1; y++)
+                {
+                    double result = 0;
+
+                    result = averageDensity[x, y] * Trigon.sin(areaCoh[x, y] * 90);
+
+                    complex[x, y] = result;
+                }
+            }
         }
 
         private static void errosia(int steps)
@@ -771,7 +742,7 @@ namespace NIR_WindowsForms
 
         private static void dilotacia(int steps)
         {
-            for (int i = 0; i < 8; i++)
+            for (int i = 0; i < 10; i++)
             {
                 double z1, z2, z3, z4, z5, z6, z7, z8, z9;
 

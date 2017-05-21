@@ -62,6 +62,8 @@
             this.resultImageBox = new System.Windows.Forms.PictureBox();
             this.sourceImageBox = new System.Windows.Forms.PictureBox();
             this.skeletonButton = new System.Windows.Forms.Button();
+            this.coordLabel = new System.Windows.Forms.Label();
+            this.brightLabel = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.gradAreaUpDown)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dencityUpDown)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.histogram)).BeginInit();
@@ -107,6 +109,7 @@
             "Волосы Вероники",
             "Качество 2",
             "Размытие Вероники",
+            "Качество 3",
             "Эррозия + Дилотация",
             "Габор(сглаживание)",
             "Габор(дифф.)"});
@@ -388,6 +391,7 @@
             this.resultImageBox.Size = new System.Drawing.Size(275, 364);
             this.resultImageBox.TabIndex = 1;
             this.resultImageBox.TabStop = false;
+            this.resultImageBox.Click += new System.EventHandler(this.resultImageBox_Click);
             // 
             // sourceImageBox
             // 
@@ -409,11 +413,31 @@
             this.skeletonButton.UseVisualStyleBackColor = true;
             this.skeletonButton.Click += new System.EventHandler(this.skeletonButton_Click);
             // 
+            // coordLabel
+            // 
+            this.coordLabel.AutoSize = true;
+            this.coordLabel.Location = new System.Drawing.Point(399, 511);
+            this.coordLabel.Name = "coordLabel";
+            this.coordLabel.Size = new System.Drawing.Size(72, 13);
+            this.coordLabel.TabIndex = 35;
+            this.coordLabel.Text = "Координаты:";
+            // 
+            // brightLabel
+            // 
+            this.brightLabel.AutoSize = true;
+            this.brightLabel.Location = new System.Drawing.Point(569, 511);
+            this.brightLabel.Name = "brightLabel";
+            this.brightLabel.Size = new System.Drawing.Size(53, 13);
+            this.brightLabel.TabIndex = 36;
+            this.brightLabel.Text = "Яркость:";
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1108, 539);
+            this.Controls.Add(this.brightLabel);
+            this.Controls.Add(this.coordLabel);
             this.Controls.Add(this.skeletonButton);
             this.Controls.Add(this.histButton);
             this.Controls.Add(this.histogram);
@@ -486,6 +510,8 @@
         private System.Windows.Forms.DataVisualization.Charting.Chart histogram;
         private System.Windows.Forms.Button histButton;
         private System.Windows.Forms.Button skeletonButton;
+        private System.Windows.Forms.Label coordLabel;
+        private System.Windows.Forms.Label brightLabel;
     }
 }
 

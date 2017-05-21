@@ -12,7 +12,7 @@ namespace NIR_WindowsForms
 {
     public partial class MainForm : Form
     {
-        private static Bitmap sourceImage = NIR_WindowsForms.Properties.Resources._5; //исходное изображение внедренное в ресурсы программы
+        private static Bitmap sourceImage = NIR_WindowsForms.Properties.Resources._6; //исходное изображение внедренное в ресурсы программы
        
         public MainForm()
         {
@@ -153,7 +153,7 @@ namespace NIR_WindowsForms
                     break;
                 }
             }
-            UtilityFunctions.setInfoArea(Picture.binary(image, medianBright / 4));
+            UtilityFunctions.setInfoArea(Picture.binary(image, medianBright / 3));
             resultImageBox.Image = UtilityFunctions.imgInfoArea;
             
             //MessageBox.Show("Median is: " + medianBright);
@@ -162,6 +162,18 @@ namespace NIR_WindowsForms
         private void skeletonButton_Click(object sender, EventArgs e)
         {
             resultImageBox.Image = Skeleton.skeleton((Bitmap)resultImageBox.Image);
+        }
+
+        private void resultImageBox_Click(object sender, EventArgs e)
+        {
+            MouseEventArgs me = (MouseEventArgs)e;
+            Point coordinates = me.Location;
+            System.Diagnostics.Debug.WriteLine(coordinates.X + " " + coordinates.Y);
+            coordLabel.Text = "Координаты: " + coordinates.X + "; " + coordinates.Y;
+
+            Bitmap img = (Bitmap)resultImageBox.Image;
+
+            brightLabel.Text = "Яркость: " + img.GetPixel(coordinates.X, coordinates.Y).GetBrightness();
         }
     }
 }

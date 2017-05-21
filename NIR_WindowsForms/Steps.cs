@@ -59,13 +59,19 @@ namespace NIR_WindowsForms
                     UtilityFunctions.veronicaBlur();
                     return UtilityFunctions.hairVeronicaBlur();
                 case 13:
-                    return UtilityFunctions.aErrosia();
+                    UtilityFunctions.complexQ();
+                    return UtilityFunctions.complexQuality();
                 case 14:
+                    return UtilityFunctions.aErrosia();
+                case 15:
                     UtilityFunctions.gaborV2(7);
                     return UtilityFunctions.aGaborBlur();
-                case 15:
+                case 16:
                     UtilityFunctions.gaborV2Plus(13);
                     return UtilityFunctions.aGaborDiff();
+                case 17:
+                    UtilityFunctions.complexQ();
+                    return UtilityFunctions.complexQuality();
 
                 default:
                     return new Bitmap(10, 10);
