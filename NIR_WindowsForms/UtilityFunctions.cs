@@ -294,6 +294,9 @@ namespace NIR_WindowsForms
         public static Bitmap aErrosia() {
             errosia(2);
             dilotacia(2);
+
+            Skeleton.setArea(infoArea, _width, _height);
+
             return Picture.drawImage(infoArea);
         }
 
@@ -548,7 +551,7 @@ namespace NIR_WindowsForms
            
             if (divider == 0) { dencity = 0; }
 
-            if (amplitude.Count > 1) {
+            if (amplitude.Count > 2) {
                 qualityDencity[x,y] = amplitude.Min();
             } 
             

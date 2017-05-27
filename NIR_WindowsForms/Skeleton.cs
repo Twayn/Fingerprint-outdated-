@@ -12,8 +12,58 @@ namespace NIR_WindowsForms
     {
         static List<Coordinates> coordinates;
 
+        private static double[,] info;
+
         private static int width;
         private static int height;
+
+        public static void setArea(double[,] infoArea, int width, int height) {
+            Skeleton.info = new double[width, height];
+            Skeleton.info = (double[,])infoArea.Clone();
+
+            for (int i = 0; i < 6; i++)
+            {
+                double z1, z2, z3, z4, z5, z6, z7, z8, z9;
+
+                List<Coord> coordinates = new List<Coord>();
+
+                for (int x = 1; x < width - 1; x++)
+                {
+                    for (int y = 1; y < height - 1; y++)
+                    {
+                        z1 = info[x - 1, y - 1];
+                        z2 = info[x - 1, y];
+                        z3 = info[x - 1, y + 1];
+                        z4 = info[x, y - 1];
+                        z5 = info[x, y];
+                        z6 = info[x, y + 1];
+                        z7 = info[x + 1, y - 1];
+                        z8 = info[x + 1, y];
+                        z9 = info[x + 1, y + 1];
+
+                        double sum = 0.0;
+                        sum = z1 + z2 + z3 + z4 + z5 + z6 + z7 + z8 + z9;
+                        if (sum != 2295) coordinates.Add(new Coord(x, y));
+                    }
+                }
+
+                foreach (Coord c in coordinates)
+                {
+                    int x = c.getX();
+                    int y = c.getY();
+
+                    info[x - 1, y - 1] = 0;
+                    info[x - 1, y] = 0;
+                    info[x - 1, y + 1] = 0;
+                    info[x, y - 1] = 0;
+                    info[x, y] = 0;
+                    info[x, y + 1] = 0;
+                    info[x + 1, y - 1] = 0;
+                    info[x + 1, y] = 0;
+                    info[x + 1, y + 1] = 0;
+                }
+            }
+        }
 
         public static Bitmap skeleton(Bitmap binaryImage)
         {
@@ -63,9 +113,11 @@ namespace NIR_WindowsForms
 
             image = markSpecialPoints(image);
             image = delBranches(image);
+            image = toBlack(image);
+            image = lightSpecialPointsV2(image);
 
             return image;
-            return drawImage(binary);
+            //return drawImage(info);
         }
 
         public static List<Coordinates> firstStep(double[,] binary)
@@ -274,6 +326,138 @@ namespace NIR_WindowsForms
             }
             return binary;
         }
+
+        private static Bitmap toBlack(Bitmap image) {
+            Color black = Color.FromArgb(0, 0, 0);
+            for (int x = 1; x < image.Width - 1; x++) {
+                for (int y = 1; y < image.Height - 1; y++) {
+                    if (image.GetPixel(x, y).GetBrightness() != 1.0f) {
+                        image.SetPixel(x, y, black);
+                    }
+                }
+            }
+            return image;
+        }
+
+        private static Bitmap lightSpecialPoints(Bitmap image)
+        {
+            List<Coord> coordinatesEnd = new List<Coord>();
+            List<Coord> coordinatesBranch = new List<Coord>();
+
+            float z1, z2, z3, z4, z5, z6, z7, z8, z9;
+            Color red = Color.FromArgb(255, 0, 0);
+            Color green = Color.FromArgb(0, 255, 0);
+            Pen redPen = new Pen(Color.Red, 1);
+            Pen blackPen = new Pen(Color.Black, 1);
+
+            for (int x = 1; x < image.Width - 1; x++)
+            {
+                for (int y = 1; y < image.Height - 1; y++)
+                {
+                    z1 = image.GetPixel(x, y).GetBrightness();
+                    z2 = image.GetPixel(x, y - 1).GetBrightness();
+                    z3 = image.GetPixel(x + 1, y - 1).GetBrightness();
+                    z4 = image.GetPixel(x + 1, y).GetBrightness();
+                    z5 = image.GetPixel(x + 1, y + 1).GetBrightness();
+                    z6 = image.GetPixel(x, y + 1).GetBrightness();
+                    z7 = image.GetPixel(x - 1, y + 1).GetBrightness();
+                    z8 = image.GetPixel(x - 1, y).GetBrightness();
+                    z9 = image.GetPixel(x - 1, y - 1).GetBrightness();
+
+                    if ((z2 + z3 + z4 + z5 + z6 + z7 + z8 + z9 == 7) && (z1 == 0))
+                    {
+                        image.SetPixel(x, y, red); //Точки конца
+                        coordinatesEnd.Add(new Coord(x, y));
+                    }
+
+                    if ((z2 + z3 + z4 + z5 + z6 + z7 + z8 + z9 == 5) && (z1 == 0))
+                    {
+                        image.SetPixel(x, y, red); //Точки ветвления
+                        coordinatesBranch.Add(new Coord(x, y));
+                    }
+                }
+            }
+            using (var graphics = Graphics.FromImage(image)) { 
+                foreach (Coord c in coordinatesEnd) {
+                    graphics.DrawEllipse(blackPen, c.getX()-5, c.getY()-5, 10, 10); 
+                }
+
+                foreach (Coord c in coordinatesBranch) {
+                    graphics.DrawEllipse(redPen, c.getX()-5, c.getY()-5, 10, 10); 
+                }
+            }
+            
+            return image;
+        }
+
+        private static Bitmap lightSpecialPointsV2(Bitmap image)
+        {
+            List<Coord> coordinatesEnd = new List<Coord>();
+            List<Coord> coordinatesBranch = new List<Coord>();
+
+            float z1, z2, z3, z4, z5, z6, z7, z8, z9;
+            bool b1, b2, b3, b4, b5, b6, b7, b8, b9;
+            Color red = Color.FromArgb(255, 0, 0);
+            Color green = Color.FromArgb(0, 255, 0);
+            Pen redPen = new Pen(Color.Red, 1);
+            Pen blackPen = new Pen(Color.Black, 1);
+
+            for (int x = 1; x < image.Width - 1; x++)
+            {
+                for (int y = 1; y < image.Height - 1; y++)
+                {
+                    z1 = image.GetPixel(x, y).GetBrightness();
+                    z2 = image.GetPixel(x, y - 1).GetBrightness();
+                    z3 = image.GetPixel(x + 1, y - 1).GetBrightness();
+                    z4 = image.GetPixel(x + 1, y).GetBrightness();
+                    z5 = image.GetPixel(x + 1, y + 1).GetBrightness();
+                    z6 = image.GetPixel(x, y + 1).GetBrightness();
+                    z7 = image.GetPixel(x - 1, y + 1).GetBrightness();
+                    z8 = image.GetPixel(x - 1, y).GetBrightness();
+                    z9 = image.GetPixel(x - 1, y - 1).GetBrightness();
+
+                    if ((z2 + z3 + z4 + z5 + z6 + z7 + z8 + z9 == 7) && (z1 == 0))
+                    {
+                        if (info[x,y] == 255)
+                        coordinatesEnd.Add(new Coord(x, y));
+                    }
+
+                    b1 = toBool(image.GetPixel(x, y).GetBrightness());
+                    b2 = toBool(image.GetPixel(x, y - 1).GetBrightness());
+                    b3 = toBool(image.GetPixel(x + 1, y - 1).GetBrightness());
+                    b4 = toBool(image.GetPixel(x + 1, y).GetBrightness());
+                    b5 = toBool(image.GetPixel(x + 1, y + 1).GetBrightness());
+                    b6 = toBool(image.GetPixel(x, y + 1).GetBrightness());
+                    b7 = toBool(image.GetPixel(x - 1, y + 1).GetBrightness());
+                    b8 = toBool(image.GetPixel(x - 1, y).GetBrightness());
+                    b9 = toBool(image.GetPixel(x - 1, y - 1).GetBrightness());
+
+                    bool[] mas = { b2, b3, b4, b5, b6, b7, b8, b9 };
+
+                    if (b1 == false)
+                    {
+                        int number = getNumber(mas);
+                        if ((number == 78) || (number == 37) || (number == 73) || (number == 58) || (number == 74))
+                        {
+                            coordinatesBranch.Add(new Coord(x, y));
+                        }
+
+                    }
+                }
+            }
+
+            using (var graphics = Graphics.FromImage(image)) { 
+                foreach (Coord c in coordinatesEnd) {
+                    graphics.DrawEllipse(blackPen, c.getX()-5, c.getY()-5, 10, 10); 
+                }
+
+                foreach (Coord c in coordinatesBranch) {
+                    graphics.DrawEllipse(redPen, c.getX()-5, c.getY()-5, 10, 10); 
+                }
+            }
+            return image;
+        }
+
 
         private static Bitmap markSpecialPoints(Bitmap binaryImage)
         {

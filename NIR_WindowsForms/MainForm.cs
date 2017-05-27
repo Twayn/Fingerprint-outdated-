@@ -12,7 +12,7 @@ namespace NIR_WindowsForms
 {
     public partial class MainForm : Form
     {
-        private static Bitmap sourceImage = NIR_WindowsForms.Properties.Resources._6; //исходное изображение внедренное в ресурсы программы
+        private static Bitmap sourceImage = NIR_WindowsForms.Properties.Resources._5; //исходное изображение внедренное в ресурсы программы
        
         public MainForm()
         {
@@ -153,7 +153,8 @@ namespace NIR_WindowsForms
                     break;
                 }
             }
-            UtilityFunctions.setInfoArea(Picture.binary(image, medianBright / 3));
+            
+            UtilityFunctions.setInfoArea(Picture.binary(image, medianBright / 3.5f));
             resultImageBox.Image = UtilityFunctions.imgInfoArea;
             
             //MessageBox.Show("Median is: " + medianBright);
